@@ -2728,7 +2728,7 @@ az.AnchorPoint=Vector2.new(0,1)
 end
 
 if ag.KeySystem.URL then
-ae("Get key","key",function()
+ae("Get key","solar:key-bold",function()
 setclipboard(ag.KeySystem.URL)
 end,"Secondary",ax.Frame)
 end
@@ -2918,8 +2918,8 @@ end)
 ab.AddSignal(v.MouseButton1Click,function()
 r.Copy()
 ag.WindUI:Notify{
-Title="Key System",
-Content="Key link copied to clipboard.",
+Title="NovaAxis | Hub",
+Content="Discord Link Copied!",
 Image="solar:key-bold",
 }
 end)
@@ -2974,8 +2974,8 @@ ai(true)
 end
 else
 ag.WindUI:Notify{
-Title="Key System. Error",
-Content="Invalid key.",
+Title="NovaAxis | Hub",
+Content="Invalid Key!",
 Icon="solar:danger-triangle-bold",
 }
 end
@@ -3007,8 +3007,8 @@ if b then
 handleSuccess(aA)
 else
 ag.WindUI:Notify{
-Title="Key System. Error",
-Content=d,
+Title="NovaAxis | Hub",
+Content="Error: "..d,
 Icon="solar:danger-triangle-bold",
 }
 end
@@ -3017,6 +3017,7 @@ end,"Primary",ax)
 
 aA.AnchorPoint=Vector2.new(1,0.5)
 aA.Position=UDim2.new(1,0,0.5,0)
+
 
 
 
