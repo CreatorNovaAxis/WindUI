@@ -2612,7 +2612,7 @@ at,
 as,
 })
 
-local av=af("Enter Key","key",nil,"Input",function(av)
+local av=af("Enter Key","solar:key-bold",nil,"Input",function(av)
 an=av
 end)
 
@@ -2716,7 +2716,7 @@ PaddingBottom=UDim.new(0,16),
 
 
 
-local az=ae("Exit","log-out",function()
+local az=ae("Exit","solar:exit-bold",function()
 al:Close()()
 end,"Tertiary",ax.Frame)
 
@@ -2744,7 +2744,7 @@ if ag.KeySystem.API then
 
 local aA=240
 local aB=false
-local b=ae("Get key","key",nil,"Secondary",ax.Frame)
+local b=ae("Get key","solar:key-bold",nil,"Secondary",ax.Frame)
 
 local d=ab.NewRoundFrame(99,"Squircle",{
 Size=UDim2.new(0,1,1,0),
@@ -2767,7 +2767,7 @@ PaddingRight=UDim.new(0,5),
 }),
 })
 
-local f=ab.Image("chevron-down","chevron-down",0,"Temp","KeySystem",true)
+local f=ab.Image("solar:square-alt-arrow-down-bold","solar:square-alt-arrow-down-bold",0,"Temp","KeySystem",true)
 
 f.Size=UDim2.new(1,0,1,0)
 
@@ -2843,8 +2843,8 @@ r.Type=l.Type
 table.insert(am,r)
 
 local u=ab.Image(
-l.Icon or m.Icon or Icons[l.Type]or"user",
-l.Icon or m.Icon or Icons[l.Type]or"user",
+l.Icon or m.Icon or Icons[l.Type]or"solar:user-bold",
+l.Icon or m.Icon or Icons[l.Type]or"solar:user-bold",
 0,
 "Temp",
 "KeySystem",
@@ -2920,7 +2920,7 @@ r.Copy()
 ag.WindUI:Notify{
 Title="Key System",
 Content="Key link copied to clipboard.",
-Image="key",
+Image="solar:key-bold",
 }
 end)
 end
@@ -2957,7 +2957,7 @@ task.wait(0.4)
 ai(true)
 end
 
-local aA=ae("Submit","arrow-right",function()
+local aA=ae("Submit","solar:square-alt-arrow-right-bold",function()
 local aA=tostring(an or"empty")local aB=
 ag.Folder or ag.Title
 
@@ -2976,7 +2976,7 @@ else
 ag.WindUI:Notify{
 Title="Key System. Error",
 Content="Invalid key.",
-Icon="triangle-alert",
+Icon="solar:danger-triangle-bold",
 }
 end
 elseif not ag.KeySystem.API then
@@ -3009,7 +3009,7 @@ else
 ag.WindUI:Notify{
 Title="Key System. Error",
 Content=d,
-Icon="triangle-alert",
+Icon="solar:danger-triangle-bold",
 }
 end
 end
@@ -3017,7 +3017,6 @@ end,"Primary",ax)
 
 aA.AnchorPoint=Vector2.new(1,0.5)
 aA.Position=UDim2.new(1,0,0.5,0)
-
 
 
 
