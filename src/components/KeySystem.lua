@@ -500,7 +500,6 @@ function KeySystem.new(Config, Filename, func, keyValidator)
 	--         0
 	--     )
 	-- end)
-
 	KeyDialog:Open()
 end
 
