@@ -1252,7 +1252,7 @@ end
 
 function f.New(g)
 local h={
-Title=g.Title or"Notification",
+Title=g.Title or"NovaAxis | Hub",
 Content=g.Content or nil,
 Icon=g.Icon or nil,
 IconThemed=g.IconThemed,
