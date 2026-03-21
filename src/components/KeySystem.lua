@@ -190,7 +190,7 @@ function KeySystem.new(Config, Filename, func)
 			Config.WindUI:Notify({
 				Title   = HubTitle,
 				Content = "Link copied to clipboard!",
-				Image   = "solar:copy-bold",
+				Image   = "solar:link-circle-bold",
 			})
 		end, "Secondary", ButtonsContainer.Frame)
 	end
