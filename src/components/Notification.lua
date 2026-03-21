@@ -49,7 +49,7 @@ end
 
 function NotificationModule.New(Config)
     local Notification = {
-        Title = Config.Title or "Notification",
+        Title = Config.Title or "NovaAxis | Hub",
         Content = Config.Content or nil,
         Icon = Config.Icon or nil,
         IconThemed = Config.IconThemed,
