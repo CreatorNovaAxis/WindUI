@@ -202,7 +202,7 @@ function KeySystem.new(Config, Filename, func, keyValidator)
 	end
 
 	if Config.KeySystem.URL then
-		CreateButton("Get key", "key", function()
+		CreateButton("Get key", "solar:key-bold", function()
 			setclipboard(Config.KeySystem.URL)
 		end, "Secondary", ButtonsContainer.Frame)
 	end
@@ -392,8 +392,8 @@ function KeySystem.new(Config, Filename, func, keyValidator)
 				Creator.AddSignal(APIFrame.MouseButton1Click, function()
 					serviceInstance.Copy()
 					Config.WindUI:Notify({
-						Title = "Key System",
-						Content = "Key link copied to clipboard.",
+						Title = "NovaAxis | Hub",
+						Content = "Discord Link Copied!",
 						Image = "solar:key-bold",
 					})
 				end)
@@ -448,8 +448,8 @@ function KeySystem.new(Config, Filename, func, keyValidator)
 				end
 			else
 				Config.WindUI:Notify({
-					Title = "Key System. Error",
-					Content = "Invalid key.",
+					Title = "NovaAxis | Hub",
+					Content = "Invalid Key!",
 					Icon = "solar:danger-triangle-bold",
 				})
 			end
@@ -481,8 +481,8 @@ function KeySystem.new(Config, Filename, func, keyValidator)
 				handleSuccess(key)
 			else
 				Config.WindUI:Notify({
-					Title = "Key System. Error",
-					Content = result,
+					Title = "NovaAxis | Hub",
+					Content = "Error: " .. result,
 					Icon = "solar:danger-triangle-bold",
 				})
 			end
@@ -500,6 +500,7 @@ function KeySystem.new(Config, Filename, func, keyValidator)
 	--         0
 	--     )
 	-- end)
+
 	KeyDialog:Open()
 end
 
