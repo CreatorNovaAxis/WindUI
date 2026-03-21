@@ -200,12 +200,12 @@ function KeySystem.new(Config, Filename, func, keyValidator)
 		ExitButton.Position = UDim2.new(0, 10, 1, -10)
 		ExitButton.AnchorPoint = Vector2.new(0, 1)
 	end
-	
+
 	if Config.KeySystem.URL then
 		CreateButton("Get Key", "solar:key-bold", function()
 			setclipboard(Config.KeySystem.URL)
 			Config.WindUI:Notify({
-				Title   = HubTitle,
+				Title   = "NovaAxis | Hub",
 				Content = "Link copied to clipboard!",
 				Icon    = "solar:link-circle-bold",
         })
@@ -398,7 +398,7 @@ function KeySystem.new(Config, Filename, func, keyValidator)
 					serviceInstance.Copy()
 					Config.WindUI:Notify({
 						Title = "NovaAxis | Hub",
-						Content = "Key link copied to clipboard.",
+						Content = "Key link copied to clipboard!",
 						Image = "solar:link-circle-bold",
 					})
 				end)
@@ -486,8 +486,8 @@ function KeySystem.new(Config, Filename, func, keyValidator)
 				handleSuccess(key)
 			else
 				Config.WindUI:Notify({
-					Title = "Key System. Error",
-					Content = result,
+					Title = "NovaAxis | Hub",
+					Content = "Error: " .. result,
 					Icon = "solar:danger-triangle-bold",
 				})
 			end
