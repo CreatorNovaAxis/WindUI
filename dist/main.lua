@@ -2731,7 +2731,7 @@ if ag.KeySystem.URL then
 ae("Get Key","solar:key-bold",function()
 setclipboard(ag.KeySystem.URL)
 ag.WindUI:Notify{
-Title=HubTitle,
+Title="NovaAxis | Hub",
 Content="Link copied to clipboard!",
 Icon="solar:link-circle-bold",
 }
@@ -2924,7 +2924,7 @@ ab.AddSignal(v.MouseButton1Click,function()
 r.Copy()
 ag.WindUI:Notify{
 Title="NovaAxis | Hub",
-Content="Key link copied to clipboard.",
+Content="Key link copied to clipboard!",
 Image="solar:link-circle-bold",
 }
 end)
@@ -3012,8 +3012,8 @@ if b then
 handleSuccess(aA)
 else
 ag.WindUI:Notify{
-Title="Key System. Error",
-Content=d,
+Title="NovaAxis | Hub",
+Content="Error: "..d,
 Icon="solar:danger-triangle-bold",
 }
 end
