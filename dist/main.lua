@@ -2533,29 +2533,32 @@ local ad=ab.Tween
 local ae=a.load'l'.New
 local af=a.load'm'.New
 
-function aa.new(ag,ah,ai,aj)
-local ak=a.load'n'.Init(nil,ag.WindUI,ag.WindUI.ScreenGui.KeySystem)
-local al=ak.Create(true)
+local function closeAndRun(ag,ah,...)
+ag:Close()()
+task.wait(0.4)
+ah(...)
+end
 
+function aa.new(ag,ah,ai)
+local aj=a.load'n'.Init(nil,ag.WindUI,ag.WindUI.ScreenGui.KeySystem)
+local ak=aj.Create(true)
+
+local al=ag.Title or"Hub"
 local am={}
-
 local an
 
 local ao=(ag.KeySystem.Thumbnail and ag.KeySystem.Thumbnail.Width)or 200
-
 local ap=430
 if ag.KeySystem.Thumbnail and ag.KeySystem.Thumbnail.Image then
 ap=430+(ao/2)
 end
 
-al.UIElements.Main.AutomaticSize="Y"
-al.UIElements.Main.Size=UDim2.new(0,ap,0,0)
+ak.UIElements.Main.AutomaticSize="Y"
+ak.UIElements.Main.Size=UDim2.new(0,ap,0,0)
 
 local aq
-
 if ag.Icon then
-aq=
-ab.Image(ag.Icon,ag.Title..":"..ag.Icon,0,"Temp","KeySystem",ag.IconThemed)
+aq=ab.Image(ag.Icon,ag.Title..":"..ag.Icon,0,"Temp","KeySystem",ag.IconThemed)
 aq.Size=UDim2.new(0,24,0,24)
 aq.LayoutOrder=-1
 end
@@ -2563,11 +2566,9 @@ end
 local ar=ac("TextLabel",{
 AutomaticSize="XY",
 BackgroundTransparency=1,
-Text=ag.KeySystem.Title or ag.Title,
+Text=ag.KeySystem.Title or al,
 FontFace=Font.new(ab.Font,Enum.FontWeight.SemiBold),
-ThemeTag={
-TextColor3="Text",
-},
+ThemeTag={TextColor3="Text"},
 TextSize=20,
 })
 
@@ -2577,11 +2578,9 @@ BackgroundTransparency=1,
 Text="Key System",
 AnchorPoint=Vector2.new(1,0.5),
 Position=UDim2.new(1,0,0.5,0),
-TextTransparency=1,
+TextTransparency=0.4,
 FontFace=Font.new(ab.Font,Enum.FontWeight.Medium),
-ThemeTag={
-TextColor3="Text",
-},
+ThemeTag={TextColor3="Text"},
 TextSize=16,
 })
 
@@ -2603,11 +2602,6 @@ AutomaticSize="Y",
 Size=UDim2.new(1,0,0,0),
 BackgroundTransparency=1,
 },{
-
-
-
-
-
 at,
 as,
 })
@@ -2626,9 +2620,7 @@ TextXAlignment="Left",
 Text=ag.KeySystem.Note,
 TextSize=18,
 TextTransparency=0.4,
-ThemeTag={
-TextColor3="Text",
-},
+ThemeTag={TextColor3="Text"},
 BackgroundTransparency=1,
 RichText=true,
 TextWrapped=true,
@@ -2657,9 +2649,7 @@ local az
 if ag.KeySystem.Thumbnail.Title then
 az=ac("TextLabel",{
 Text=ag.KeySystem.Thumbnail.Title,
-ThemeTag={
-TextColor3="Text",
-},
+ThemeTag={TextColor3="Text"},
 TextSize=18,
 FontFace=Font.new(ab.Font,Enum.FontWeight.Medium),
 BackgroundTransparency=1,
@@ -2668,30 +2658,27 @@ AnchorPoint=Vector2.new(0.5,0.5),
 Position=UDim2.new(0.5,0,0.5,0),
 })
 end
+
 ay=ac("ImageLabel",{
 Image=ag.KeySystem.Thumbnail.Image,
 BackgroundTransparency=1,
 Size=UDim2.new(0,ao,1,-12),
 Position=UDim2.new(0,6,0,6),
-Parent=al.UIElements.Main,
+Parent=ak.UIElements.Main,
 ScaleType="Crop",
 },{
 az,
-ac("UICorner",{
-CornerRadius=UDim.new(0,20),
-}),
+ac("UICorner",{CornerRadius=UDim.new(0,20)}),
 })
 end
 
 ac("Frame",{
-
 Size=UDim2.new(1,ay and-ao or 0,1,0),
 Position=UDim2.new(0,ay and ao or 0,0,0),
 BackgroundTransparency=1,
-Parent=al.UIElements.Main,
+Parent=ak.UIElements.Main,
 },{
 ac("Frame",{
-
 Size=UDim2.new(1,0,1,0),
 BackgroundTransparency=1,
 },{
@@ -2712,12 +2699,8 @@ PaddingBottom=UDim.new(0,16),
 }),
 })
 
-
-
-
-
 local az=ae("Exit","solar:exit-bold",function()
-al:Close()()
+ak:Close()()
 end,"Tertiary",ax.Frame)
 
 if ay then
@@ -2728,29 +2711,25 @@ az.AnchorPoint=Vector2.new(0,1)
 end
 
 if ag.KeySystem.URL then
-ae("Get key","solar:key-bold",function()
+ae("Get Key","solar:key-bold",function()
 setclipboard(ag.KeySystem.URL)
+ag.WindUI:Notify{
+Title=al,
+Content="Link copied to clipboard!",
+Image="solar:copy-bold",
+}
 end,"Secondary",ax.Frame)
 end
 
 if ag.KeySystem.API then
-
-
-
-
-
-
-
-
 local aA=240
 local aB=false
-local b=ae("Get key","solar:key-bold",nil,"Secondary",ax.Frame)
+
+local b=ae("Get Key","solar:key-bold",nil,"Secondary",ax.Frame)
 
 local d=ab.NewRoundFrame(99,"Squircle",{
 Size=UDim2.new(0,1,1,0),
-ThemeTag={
-ImageColor3="Text",
-},
+ThemeTag={ImageColor3="Text"},
 ImageTransparency=0.9,
 })
 
@@ -2768,34 +2747,25 @@ PaddingRight=UDim.new(0,5),
 })
 
 local f=ab.Image("solar:square-alt-arrow-down-bold","solar:square-alt-arrow-down-bold",0,"Temp","KeySystem",true)
-
 f.Size=UDim2.new(1,0,1,0)
 
 ac("Frame",{
 Size=UDim2.new(0,21,0,21),
 Parent=b.Frame,
 BackgroundTransparency=1,
-},{
-f,
-})
+},{f})
+
 
 local g=ab.NewRoundFrame(15,"Squircle",{
 Size=UDim2.new(1,0,0,0),
 AutomaticSize="Y",
-ThemeTag={
-ImageColor3="Background",
-},
+ThemeTag={ImageColor3="Background"},
 },{
 ac("UIPadding",{
-PaddingTop=UDim.new(0,5),
-PaddingLeft=UDim.new(0,5),
-PaddingRight=UDim.new(0,5),
-PaddingBottom=UDim.new(0,5),
+PaddingTop=UDim.new(0,5),PaddingLeft=UDim.new(0,5),
+PaddingRight=UDim.new(0,5),PaddingBottom=UDim.new(0,5),
 }),
-ac("UIListLayout",{
-FillDirection="Vertical",
-Padding=UDim.new(0,5),
-}),
+ac("UIListLayout",{FillDirection="Vertical",Padding=UDim.new(0,5)}),
 })
 
 local h=ac("Frame",{
@@ -2805,9 +2775,7 @@ ClipsDescendants=true,
 AnchorPoint=Vector2.new(1,0),
 Parent=b,
 Position=UDim2.new(1,0,1,15),
-},{
-g,
-})
+},{g})
 
 ac("TextLabel",{
 Text="Select Service",
@@ -2823,16 +2791,15 @@ TextXAlignment="Left",
 Parent=g,
 },{
 ac("UIPadding",{
-PaddingTop=UDim.new(0,10),
-PaddingLeft=UDim.new(0,10),
-PaddingRight=UDim.new(0,10),
-PaddingBottom=UDim.new(0,10),
+PaddingTop=UDim.new(0,10),PaddingLeft=UDim.new(0,10),
+PaddingRight=UDim.new(0,10),PaddingBottom=UDim.new(0,10),
 }),
 })
 
 for j,l in next,ag.KeySystem.API do
 local m=ag.WindUI.Services[l.Type]
-if m then
+if not m then continue end
+
 local p={}
 for r,u in next,m.Args do
 table.insert(p,l[u])
@@ -2843,12 +2810,9 @@ r.Type=l.Type
 table.insert(am,r)
 
 local u=ab.Image(
-l.Icon or m.Icon or Icons[l.Type]or"solar:user-bold",
-l.Icon or m.Icon or Icons[l.Type]or"solar:user-bold",
-0,
-"Temp",
-"KeySystem",
-true
+l.Icon or m.Icon or"solar:user-bold",
+l.Icon or m.Icon or"solar:user-bold",
+0,"Temp","KeySystem",true
 )
 u.Size=UDim2.new(0,24,0,24)
 
@@ -2866,10 +2830,8 @@ VerticalAlignment="Center",
 }),
 u,
 ac("UIPadding",{
-PaddingTop=UDim.new(0,10),
-PaddingLeft=UDim.new(0,10),
-PaddingRight=UDim.new(0,10),
-PaddingBottom=UDim.new(0,10),
+PaddingTop=UDim.new(0,10),PaddingLeft=UDim.new(0,10),
+PaddingRight=UDim.new(0,10),PaddingBottom=UDim.new(0,10),
 }),
 ac("Frame",{
 BackgroundTransparency=1,
@@ -2879,7 +2841,6 @@ AutomaticSize="Y",
 ac("UIListLayout",{
 FillDirection="Vertical",
 Padding=UDim.new(0,5),
-HorizontalAlignment="Center",
 }),
 ac("TextLabel",{
 Text=l.Title or m.Name,
@@ -2903,47 +2864,30 @@ TextSize=16,
 Size=UDim2.new(1,0,0,0),
 AutomaticSize="Y",
 TextWrapped=true,
-Visible=l.Desc and true or false,
+Visible=l.Desc~=nil,
 TextXAlignment="Left",
 }),
 }),
 },true)
 
-ab.AddSignal(v.MouseEnter,function()
-ad(v,0.08,{ImageTransparency=0.95}):Play()
-end)
-ab.AddSignal(v.InputEnded,function()
-ad(v,0.08,{ImageTransparency=1}):Play()
-end)
+ab.AddSignal(v.MouseEnter,function()ad(v,0.08,{ImageTransparency=0.95}):Play()end)
+ab.AddSignal(v.InputEnded,function()ad(v,0.08,{ImageTransparency=1}):Play()end)
 ab.AddSignal(v.MouseButton1Click,function()
 r.Copy()
 ag.WindUI:Notify{
-Title="NovaAxis | Hub",
-Content="Discord Link Copied!",
-Image="solar:key-bold",
+Title=al,
+Content="Link copied to clipboard!",
+Image="solar:copy-bold",
 }
 end)
-end
 end
 
 ab.AddSignal(b.MouseButton1Click,function()
 if not aB then
-ad(
-h,
-0.3,
-{Size=UDim2.new(0,aA,0,g.AbsoluteSize.Y+1)},
-Enum.EasingStyle.Quint,
-Enum.EasingDirection.Out
-):Play()
+ad(h,0.3,{Size=UDim2.new(0,aA,0,g.AbsoluteSize.Y+1)},Enum.EasingStyle.Quint,Enum.EasingDirection.Out):Play()
 ad(f,0.3,{Rotation=180},Enum.EasingStyle.Quint,Enum.EasingDirection.Out):Play()
 else
-ad(
-h,
-0.25,
-{Size=UDim2.new(0,aA,0,0)},
-Enum.EasingStyle.Quint,
-Enum.EasingDirection.Out
-):Play()
+ad(h,0.25,{Size=UDim2.new(0,aA,0,0)},Enum.EasingStyle.Quint,Enum.EasingDirection.Out):Play()
 ad(f,0.25,{Rotation=0},Enum.EasingStyle.Quint,Enum.EasingDirection.Out):Play()
 end
 aB=not aB
@@ -2951,66 +2895,57 @@ end)
 end
 
 local function handleSuccess(aA)
-al:Close()()
-writefile((ag.Folder or"Temp").."/"..ah..".key",tostring(aA))
-task.wait(0.4)
-ai(true)
+if ag.KeySystem.SaveKey then
+local aB=ag.Folder or"Temp"
+writefile(aB.."/"..ah..".key",tostring(aA))
+end
+closeAndRun(ak,ai,true)
+end
+
+local function notifyError(aA)
+ag.WindUI:Notify{
+Title=al,
+Content=aA,
+Image="solar:danger-triangle-bold",
+}
 end
 
 local aA=ae("Submit","solar:square-alt-arrow-right-bold",function()
-local aA=tostring(an or"empty")local aB=
-ag.Folder or ag.Title
+local aA=tostring(an or"")
 
 if ag.KeySystem.KeyValidator then
-local b=ag.KeySystem.KeyValidator(aA)
-
-if b then
-if ag.KeySystem.SaveKey then
+if ag.KeySystem.KeyValidator(aA)then
 handleSuccess(aA)
 else
-al:Close()()
-task.wait(0.4)
-ai(true)
+notifyError"Invalid key!"
 end
-else
-ag.WindUI:Notify{
-Title="NovaAxis | Hub",
-Content="Invalid Key!",
-Icon="solar:danger-triangle-bold",
-}
-end
-elseif not ag.KeySystem.API then
-local b=type(ag.KeySystem.Key)=="table"and table.find(ag.KeySystem.Key,aA)
-or ag.KeySystem.Key==aA
 
-if b then
-if ag.KeySystem.SaveKey then
-handleSuccess(aA)
-else
-al:Close()()
-task.wait(0.4)
-ai(true)
-end
-end
-else
-local b,d
-for f,g in next,am do
-local h,j=g.Verify(aA)
-if h then
-b,d=true,j
+elseif ag.KeySystem.API then
+local aB,b=false,"Verification failed"
+for d,f in next,am do
+local g,h=f.Verify(aA)
+if g then
+aB=true
 break
 end
-d=j
+b=tostring(h)
 end
 
-if b then
+if aB then
 handleSuccess(aA)
 else
-ag.WindUI:Notify{
-Title="NovaAxis | Hub",
-Content="Error: "..d,
-Icon="solar:danger-triangle-bold",
-}
+notifyError("Error: "..b)
+end
+
+else
+local aB=type(ag.KeySystem.Key)=="table"
+and table.find(ag.KeySystem.Key,aA)~=nil
+or ag.KeySystem.Key==aA
+
+if aB then
+handleSuccess(aA)
+else
+notifyError"Invalid key!"
 end
 end
 end,"Primary",ax)
@@ -3018,16 +2953,7 @@ end,"Primary",ax)
 aA.AnchorPoint=Vector2.new(1,0.5)
 aA.Position=UDim2.new(1,0,0.5,0)
 
-
-
-
-
-
-
-
-
-
-al:Open()
+ak:Open()
 end
 
 return aa end function a.p()
