@@ -2716,7 +2716,7 @@ setclipboard(ag.KeySystem.URL)
 ag.WindUI:Notify{
 Title=al,
 Content="Link copied to clipboard!",
-Image="solar:link-circle-bold",
+Icon="solar:link-circle-bold",
 }
 end,"Secondary",ax.Frame)
 end
@@ -2877,7 +2877,7 @@ r.Copy()
 ag.WindUI:Notify{
 Title=al,
 Content="Link copied to clipboard!",
-Image="solar:copy-bold",
+Icon="solar:copy-bold",
 }
 end)
 end
@@ -2906,7 +2906,7 @@ local function notifyError(aA)
 ag.WindUI:Notify{
 Title=al,
 Content=aA,
-Image="solar:danger-triangle-bold",
+Icon="solar:danger-triangle-bold",
 }
 end
 
