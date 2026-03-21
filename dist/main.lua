@@ -2716,7 +2716,7 @@ setclipboard(ag.KeySystem.URL)
 ag.WindUI:Notify{
 Title=al,
 Content="Link copied to clipboard!",
-Image="solar:copy-bold",
+Image="solar:link-circle-bold",
 }
 end,"Secondary",ax.Frame)
 end
