@@ -190,7 +190,7 @@ function KeySystem.new(Config, Filename, func)
 			Config.WindUI:Notify({
 				Title   = HubTitle,
 				Content = "Link copied to clipboard!",
-				Image   = "solar:link-circle-bold",
+				Icon    = "solar:link-circle-bold",
 			})
 		end, "Secondary", ButtonsContainer.Frame)
 	end
@@ -351,7 +351,7 @@ function KeySystem.new(Config, Filename, func)
 				Config.WindUI:Notify({
 					Title   = HubTitle,
 					Content = "Link copied to clipboard!",
-					Image   = "solar:copy-bold",
+					Icon    = "solar:copy-bold",
 				})
 			end)
 		end
@@ -380,7 +380,7 @@ function KeySystem.new(Config, Filename, func)
 		Config.WindUI:Notify({
 			Title   = HubTitle,
 			Content = message,
-			Image   = "solar:danger-triangle-bold",
+			Icon    = "solar:danger-triangle-bold",
 		})
 	end
 
