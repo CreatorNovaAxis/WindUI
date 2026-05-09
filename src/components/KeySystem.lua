@@ -86,7 +86,7 @@ function KeySystem.new(Config, Filename, func, keyValidator)
 		KeySystemTitle,
 	})
 
-	local InputFrame = CreateInput("Enter Key", "solar:key-bold", nil, "Input", function(k)
+	local InputFrame = CreateInput("Enter Key", "key", nil, "Input", function(k)
 		EnteredKey = k
 	end)
 
@@ -190,7 +190,7 @@ function KeySystem.new(Config, Filename, func, keyValidator)
 	--     CreateButton(values.Title, values.Icon, values.Callback, values.Variant)
 	-- end
 
-	local ExitButton = CreateButton("Exit", "solar:exit-bold-duotone", function()
+	local ExitButton = CreateButton("Exit", "log-out", function()
 		KeyDialog:Close()()
 	end, "Tertiary", ButtonsContainer.Frame)
 
@@ -202,13 +202,8 @@ function KeySystem.new(Config, Filename, func, keyValidator)
 	end
 
 	if Config.KeySystem.URL then
-		CreateButton("Get Key", "solar:key-bold", function()
+		CreateButton("Get key", "key", function()
 			setclipboard(Config.KeySystem.URL)
-			Config.WindUI:Notify({
-				Title   = "NovaAxis | Hub",
-				Content = "Link copied to clipboard!",
-				Icon    = "solar:link-circle-bold",
-        })
 		end, "Secondary", ButtonsContainer.Frame)
 	end
 
@@ -223,7 +218,7 @@ function KeySystem.new(Config, Filename, func, keyValidator)
 		-- }
 		local Width = 240
 		local Opened = false
-		local ButtonFrame = CreateButton("Get key", "solar:key-bold", nil, "Secondary", ButtonsContainer.Frame)
+		local ButtonFrame = CreateButton("Get key", "key", nil, "Secondary", ButtonsContainer.Frame)
 
 		local Divider = Creator.NewRoundFrame(99, "Squircle", {
 			Size = UDim2.new(0, 1, 1, 0),
@@ -246,7 +241,7 @@ function KeySystem.new(Config, Filename, func, keyValidator)
 			}),
 		})
 
-		local ChevronDown = Creator.Image("solar:square-arrow-down-bold", "solar:square-arrow-down-bold", 0, "Temp", "KeySystem", true)
+		local ChevronDown = Creator.Image("chevron-down", "chevron-down", 0, "Temp", "KeySystem", true)
 
 		ChevronDown.Size = UDim2.new(1, 0, 1, 0)
 
@@ -322,8 +317,8 @@ function KeySystem.new(Config, Filename, func, keyValidator)
 				table.insert(Services, serviceInstance)
 
 				local IconFrame = Creator.Image(
-					i.Icon or serviceDef.Icon or Icons[i.Type] or "solar:user-bold",
-					i.Icon or serviceDef.Icon or Icons[i.Type] or "solar:user-bold",
+					i.Icon or serviceDef.Icon or Icons[i.Type] or "user",
+					i.Icon or serviceDef.Icon or Icons[i.Type] or "user",
 					0,
 					"Temp",
 					"KeySystem",
@@ -397,9 +392,9 @@ function KeySystem.new(Config, Filename, func, keyValidator)
 				Creator.AddSignal(APIFrame.MouseButton1Click, function()
 					serviceInstance.Copy()
 					Config.WindUI:Notify({
-						Title = "NovaAxis | Hub",
-						Content = "Key link copied to clipboard!",
-						Image = "solar:link-circle-bold",
+						Title = "Key System",
+						Content = "Key link copied to clipboard.",
+						Image = "key",
 					})
 				end)
 			end
@@ -436,7 +431,7 @@ function KeySystem.new(Config, Filename, func, keyValidator)
 		func(true)
 	end
 
-	local SubmitButton = CreateButton("Submit", "solar:square-arrow-right-bold", function()
+	local SubmitButton = CreateButton("Submit", "arrow-right", function()
 		local key = tostring(EnteredKey or "empty")
 		local folder = Config.Folder or Config.Title
 
@@ -453,9 +448,9 @@ function KeySystem.new(Config, Filename, func, keyValidator)
 				end
 			else
 				Config.WindUI:Notify({
-					Title = "NovaAxis | Hub",
+					Title = "Key System. Error",
 					Content = "Invalid key.",
-					Icon = "solar:danger-triangle-bold",
+					Icon = "triangle-alert",
 				})
 			end
 		elseif not Config.KeySystem.API then
@@ -486,9 +481,9 @@ function KeySystem.new(Config, Filename, func, keyValidator)
 				handleSuccess(key)
 			else
 				Config.WindUI:Notify({
-					Title = "NovaAxis | Hub",
-					Content = "Error: " .. result,
-					Icon = "solar:danger-triangle-bold",
+					Title = "Key System. Error",
+					Content = result,
+					Icon = "triangle-alert",
 				})
 			end
 		end
