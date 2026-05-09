@@ -39,6 +39,7 @@ function Element:New(Config)
 		AllowNone = Config.AllowNone,
 		SearchBarEnabled = Config.SearchBarEnabled or false,
 		Multi = Config.Multi,
+		SelectAll = Config.SelectAll or false,
 		Callback = Config.Callback or nil,
 
 		UIElements = {},
