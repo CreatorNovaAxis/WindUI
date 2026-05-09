@@ -66,7 +66,7 @@ return function(Config)
 		DragFrameSize = 160,
 
 		Position = UDim2.new(0.5, 0, 0.5, 0),
-		UICorner = nil, -- Window.Radius (16)
+		UICorner = 16, -- Window.Radius (16)
 		UIPadding = 14,
 		UIElements = {},
 		CanDropdown = true,
@@ -107,7 +107,7 @@ return function(Config)
 
 	Window.ElementConfig = {
 		UIPadding = (Window.NewElements and 10 or 13),
-		UICorner = Window.ElementsRadius or (Window.NewElements and 23 or 12),
+		UICorner = Window.ElementsRadius or (Window.NewElements and 23 or 16),
 	}
 
 	local WindowSize = Window.Size or UDim2.new(0, 580, 0, 460)
@@ -506,11 +506,15 @@ return function(Config)
 	local BGVideo = typeof(Window.Background) == "string" and string.match(Window.Background, "^video:(.+)") or nil
 	local BGImageUrl = typeof(Window.Background) == "string"
 			and not BGVideo
-			and string.match(Window.Background, "^https?://.+")
+			and (string.match(Window.Background, "^https?://.+") or string.match(Window.Background, "^rbx%w+://.+"))
 		or nil
 
 	local function GetImageExtension(url)
-		local ext = url:match("%.(%w+)$") or url:match("%.(%w+)%?")
+		if not url or typeof(url) ~= "string" then
+			return ".png"
+		end
+		local cleanUrl = url:match("^([^?#]+)") or url
+		local ext = cleanUrl:match("%.(%w+)$")
 		if ext then
 			ext = ext:lower()
 			if ext == "jpg" or ext == "jpeg" or ext == "png" or ext == "webp" then
@@ -520,11 +524,13 @@ return function(Config)
 		return ".png"
 	end
 
+	--print(GetImageExtension(BGImageUrl))
+
 	if typeof(Window.Background) == "string" and BGVideo then
 		IsVideoBG = true
 
 		if string.find(BGVideo, "http") then
-			local videoPath = Window.Folder .. "/assets/." .. Creator.SanitizeFilename(BGVideo) .. ".webm"
+			local videoPath = (Window.Folder or "Temp") .. "/assets/." .. Creator.SanitizeFilename(BGVideo) .. ".webm"
 			if not isfile(videoPath) then
 				local success, result = pcall(function()
 					-- local response = Creator.Request({
@@ -533,7 +539,13 @@ return function(Config)
 					-- 	Headers = { ["User-Agent"] = "Roblox/Exploit" },
 					-- })
 					local response = game.HttpGet and game:HttpGet(BGVideo)
-					writefile(videoPath, response.Body)
+						or Creator.Request({
+							Url = BGVideo,
+							Method = "GET",
+							Headers = { ["User-Agent"] = "Roblox/Exploit" },
+						}).Body
+					--print(response)
+					writefile(videoPath, response)
 				end)
 				if not success then
 					warn("[ WindUI.Window.Background ] Failed to download video: " .. tostring(result))
@@ -565,7 +577,7 @@ return function(Config)
 		})
 		BGImage:Play()
 	elseif BGImageUrl then
-		local imagePath = Window.Folder
+		local imagePath = (Window.Folder or "Temp")
 			.. "/assets/."
 			.. Creator.SanitizeFilename(BGImageUrl)
 			.. GetImageExtension(BGImageUrl)
@@ -577,7 +589,13 @@ return function(Config)
 				-- 	Headers = { ["User-Agent"] = "Roblox/Exploit" },
 				-- })
 				local response = game.HttpGet and game:HttpGet(BGImageUrl)
-				writefile(imagePath, response.Body)
+					or Creator.Request({
+						Url = BGVideo,
+						Method = "GET",
+						Headers = { ["User-Agent"] = "Roblox/Exploit" },
+					}).Body
+				--print(response)
+				writefile(imagePath, response)
 			end)
 			if not success then
 				warn("[ Window.Background ] Failed to download image: " .. tostring(result))
@@ -596,7 +614,7 @@ return function(Config)
 		BGImage = New("ImageLabel", {
 			BackgroundTransparency = 1,
 			Size = UDim2.new(1, 0, 1, 0),
-			Image = customAsset,
+			Image = customAsset or BGImageUrl,
 			ImageTransparency = 0,
 			ScaleType = "Crop",
 		}, {
@@ -703,7 +721,7 @@ return function(Config)
 			--     Scale = 0.95,
 			-- }),
 		}),
-		UIStroke,
+		--UIStroke,
 		UICorner,
 		FullScreenIcon,
 		FullScreenBlur,
@@ -1327,7 +1345,6 @@ return function(Config)
 			end)
 
 			Window.CanDropdown = true
-
 			Window.UIElements.Main.Visible = true
 			task.spawn(function()
 				task.wait(0.05)
@@ -1348,7 +1365,9 @@ return function(Config)
 
 		Config.WindUI:ToggleAcrylic(false)
 
-		Window.UIElements.Main:WaitForChild("Main").Visible = false
+		if Window.UIElements.Main and Window.UIElements.Main:WaitForChild("Main") then
+			Window.UIElements.Main.Main.Visible = false
+		end
 
 		Window.CanDropdown = false
 		Window.Closed = true
@@ -1651,7 +1670,7 @@ return function(Config)
 		return MainDivider
 	end
 
-	local DialogModule = require("./Dialog").Init(Window, Config.WindUI, nil)
+	local DialogModule = require("./Dialog")
 	function Window:Dialog(DialogConfig)
 		local DialogTable = {
 			Title = DialogConfig.Title or "Dialog",
@@ -1661,7 +1680,7 @@ return function(Config)
 
 			TextPadding = 14,
 		}
-		local Dialog = DialogModule.Create(false)
+		local Dialog = DialogModule.Create(false, "Dialog", Window, Config.WindUI, Window.UIElements.Main.Main)
 
 		Dialog.UIElements.Main.Size = UDim2.new(0, DialogTable.Width, 0, 0)
 
@@ -1769,7 +1788,8 @@ return function(Config)
 		local ButtonsLayout = New("UIListLayout", {
 			Padding = UDim.new(0, 6),
 			FillDirection = "Horizontal",
-			HorizontalAlignment = "Right",
+			HorizontalAlignment = "Center",
+			HorizontalFlex = "Fill",
 		})
 
 		local ButtonsContent = New("Frame", {
@@ -1794,6 +1814,7 @@ return function(Config)
 			local ButtonFrame =
 				CreateButton(Button.Title, Button.Icon, Button.Callback, Button.Variant, ButtonsContent, Dialog, true)
 			table.insert(Buttons, ButtonFrame)
+			ButtonFrame.Size = UDim2.new(1, 0, 1, 0)
 		end
 
 		local function CheckButtonsOverflow()
@@ -1844,10 +1865,10 @@ return function(Config)
 			end
 		end
 
-		Creator.AddSignal(Dialog.UIElements.Main:GetPropertyChangedSignal("AbsoluteSize"), CheckButtonsOverflow)
-		CheckButtonsOverflow()
+		-- Creator.AddSignal(Dialog.UIElements.Main:GetPropertyChangedSignal("AbsoluteSize"), CheckButtonsOverflow)
+		-- CheckButtonsOverflow()
 
-		wait()
+		-- wait()
 		Dialog:Open()
 
 		return Dialog
@@ -1859,7 +1880,7 @@ return function(Config)
 		if not ClickedClose then
 			if not Window.IgnoreAlerts then
 				ClickedClose = true
-				Window:SetToTheCenter()
+				--Window:SetToTheCenter()
 				Window:Dialog({
 					--Icon = "trash-2",
 					Title = "Close Window",
@@ -1894,6 +1915,7 @@ return function(Config)
 		if Window.UIElements.Main.Main.Topbar.Center.Visible == false then
 			Window.UIElements.Main.Main.Topbar.Center.Visible = true
 		end
+		TagConfig.Window = Window
 		return Tag:New(TagConfig, Window.UIElements.Main.Main.Topbar.Center)
 	end
 

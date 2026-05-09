@@ -39,6 +39,19 @@ local Window = WindUI:CreateWindow({
 	Transparent = true,
 	ToggleKey = Enum.KeyCode.F,
 	Acrylic = true,
+
+	KeySystem = {
+		Title = "Key System",
+		Description = "Enter the correct key to unlock the window",
+		KeyValidator = function(key)
+			return key == "HelloWorld"
+		end,
+	}
+})
+
+local Tag = Window:Tag({
+	Title = "Hi my tag",
+	Color = "Text",
 })
 
 local TopbarButton1 = Window.Topbar:Button({
@@ -51,6 +64,11 @@ local Tab1 = Window:Tab({
 	Title = "Main",
 	Icon = "rbxassetid://77799629590713",
 	IconThemed = true,
+})
+
+local Tab2 = Window:Tab({
+	Title = "hahahahah",
+	Icon = "user",
 })
 
 Tab1:Select()
