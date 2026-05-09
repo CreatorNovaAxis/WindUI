@@ -51,7 +51,7 @@ end
 
 function NotificationModule.New(Config)
     local Notification = {
-        Title = Config.Title or "NovaAxis | Hub",
+        Title = Config.Title or "Notification",
         Content = Config.Content or nil,
         Icon = Config.Icon or nil,
         IconThemed = Config.IconThemed,
@@ -206,21 +206,24 @@ function NotificationModule.New(Config)
     -- Buttons
     local ButtonsContainer
     if Notification.Buttons and #Notification.Buttons > 0 then
+        local buttonsAlign = Config.ButtonsAlign or "Right"
+        
         ButtonsContainer = New("Frame", {
-            Size = UDim2.new(1,0,0,32),
+            Size = UDim2.new(1,0,0,0),
+            AutomaticSize = "Y",
             BackgroundTransparency = 1,
             Parent = TextContainer,
         }, {
             New("UIListLayout", {
                 Padding = UDim.new(0,8),
                 FillDirection = "Horizontal",
-                HorizontalAlignment = "Right",
+                HorizontalAlignment = buttonsAlign,
                 VerticalAlignment = "Center",
             })
         })
         
         for _, ButtonConfig in next, Notification.Buttons do
-            CreateButton(
+            local btn = CreateButton(
                 ButtonConfig.Title,
                 ButtonConfig.Icon,
                 function()
@@ -235,6 +238,10 @@ function NotificationModule.New(Config)
                 true,
                 8
             )
+            
+            if ButtonConfig.Size then
+                btn.Size = ButtonConfig.Size
+            end
         end
     end
     
