@@ -43,6 +43,7 @@ return function(Config)
 		Footer = Config.Footer or {},
 		Topbar = Config.Topbar or { Height = 52, ButtonsType = "Default" }, -- Default or Mac
 
+
 		Size = Config.Size,
 
 		MinSize = Config.MinSize or Vector2.new(560, 350),
@@ -121,6 +122,12 @@ return function(Config)
 	if Window.Topbar == {} then
 		Window.Topbar = { Height = 52, ButtonsType = "Default" }
 	end
+
+	-- Resolve ButtonsAlign: Mac defaults to "Left", Default defaults to "Right"
+	if Window.Topbar.ButtonsAlign == nil then
+		Window.Topbar.ButtonsAlign = Window.Topbar.ButtonsType == "Mac" and "Left" or "Right"
+	end
+	local ButtonsOnLeft = Window.Topbar.ButtonsAlign == "Left"
 
 	if not RunService:IsStudio() and Window.Folder and writefile then
 		if not isfolder("WindUI/" .. Window.Folder) then
@@ -810,8 +817,8 @@ return function(Config)
 				New("Frame", { -- Topbar Right Side -- Window.UIElements.Main.Main.Topbar.Right
 					AutomaticSize = "XY",
 					BackgroundTransparency = 1,
-					Position = UDim2.new(Window.Topbar.ButtonsType == "Default" and 1 or 0, 0, 0.5, 0),
-					AnchorPoint = Vector2.new(Window.Topbar.ButtonsType == "Default" and 1 or 0, 0.5),
+					Position = UDim2.new(ButtonsOnLeft and 0 or 1, 0, 0.5, 0),
+					AnchorPoint = Vector2.new(ButtonsOnLeft and 0 or 1, 0.5),
 					Name = "Right",
 				}, {
 					New("UIListLayout", {
@@ -843,7 +850,7 @@ return function(Config)
 		--     LeftWidth = WindowTitle.TextBounds.X / Config.WindUI.UIScale
 		-- end
 		LeftWidth = Window.UIElements.Main.Main.Topbar.Left.AbsoluteSize.X / Config.WindUI.UIScale
-		if Window.Topbar.ButtonsType ~= "Default" then
+		if ButtonsOnLeft then
 			LeftWidth = LeftWidth + RightWidth + Window.UIPadding - 4
 		end
 		-- if WindowIcon then
@@ -855,7 +862,7 @@ return function(Config)
 			UDim2.new(1, -LeftWidth - RightWidth - ((Window.UIPadding * 2) / Config.WindUI.UIScale), 1, 0)
 	end)
 
-	if Window.Topbar.ButtonsType ~= "Default" then
+	if ButtonsOnLeft then
 		Creator.AddSignal(Window.UIElements.Main.Main.Topbar.Right:GetPropertyChangedSignal("AbsoluteSize"), function()
 			Window.UIElements.Main.Main.Topbar.Left.Position = UDim2.new(
 				0,
