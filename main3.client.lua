@@ -47,10 +47,11 @@ local Window = WindUI:CreateWindow({
 	-- 		return Key == "HelloWorld"
 	-- 	end,
 	-- },
-    Topbar = {
-        ButtonsType = "Mac",
-        ButtonsAlign = "Right"
-     },
+	Topbar = {
+		Height = 44,
+		ButtonsType = "Mac", -- Default or Mac
+		ButtonsAlign = "Right",
+	},
 })
 
 Window:Tag({
