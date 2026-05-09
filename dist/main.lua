@@ -9632,6 +9632,8 @@ __type="Section",
 Title=ak.Title or"Section",
 Desc=ak.Desc,
 Icon=ak.Icon,
+IconColor=ak.IconColor,
+IconShape=ak.IconShape,
 IconThemed=ak.IconThemed,
 TextXAlignment=ak.TextXAlignment or"Left",
 TextSize=ak.TextSize or 19,
@@ -9661,17 +9663,44 @@ function al.SetIcon(an,ao)
 al.Icon=ao or nil
 if am then am:Destroy()end
 if ao then
-am=aa.Image(
+local ap=aa.Image(
 ao,
 ao..":"..al.Title,
 0,
 ak.Window.Folder,
 al.__type,
-true,
+al.IconColor and false or true,
 al.IconThemed,
 "SectionIcon"
 )
+
+if al.IconColor and al.IconShape then
+local aq=al.IconShape~="Circle"and(ak.Window.ElementConfig.UICorner-6)or 9999
+
+am=aa.NewRoundFrame(
+aq,
+"Squircle",
+{
+Size=UDim2.new(0,al.IconSize+8,0,al.IconSize+8),
+ImageColor3=al.IconColor,
+BackgroundTransparency=1,
+},
+{
+ap,
+}
+)
+ap.AnchorPoint=Vector2.new(0.5,0.5)
+ap.Position=UDim2.new(0.5,0,0.5,0)
+ap.Size=UDim2.new(0,al.IconSize,0,al.IconSize)
+ap.ImageLabel.ImageTransparency=0
+ap.ImageLabel.ImageColor3=aa.GetTextColorForHSB(al.IconColor,0.68)
+else
+if al.IconColor then
+ap.ImageLabel.ImageColor3=al.IconColor
+end
+am=ap
 am.Size=UDim2.new(0,al.IconSize,0,al.IconSize)
+end
 end
 end
 
@@ -9745,7 +9774,8 @@ end
 local function UpdateTitleSize()
 local ar=0
 if am then
-ar=ar-(al.IconSize+8)
+local as=(al.IconColor and al.IconShape)and(al.IconSize+8)or al.IconSize
+ar=ar-(as+8)
 end
 if an.Visible then
 ar=ar-(al.IconSize+8)
