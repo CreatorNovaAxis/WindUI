@@ -65,6 +65,18 @@ function Element:New(Config)
                     },
                     {
                         IconFrame,
+                        Creator.NewRoundFrame(
+                            cornerRadius,
+                            "Glass-1.4",
+                            {
+                                Size = UDim2.new(1, 0, 1, 0),
+                                ThemeTag = {
+                                    ImageColor3 = "White",
+                                },
+                                ImageTransparency = 0,
+                                Name = "Outline",
+                            }
+                        ),
                     }
                 )
                 IconFrame.AnchorPoint = Vector2.new(0.5, 0.5)
