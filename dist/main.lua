@@ -12637,19 +12637,23 @@ else
 au.User:Disable()
 end
 
-if au.User.Callback then
 al.AddSignal(b.MouseButton1Click,function()
-au.User.Callback()
+if au.User.Callback then
+au.User.Callback(au.User)
+end
 end)
 al.AddSignal(b.MouseEnter,function()
+if au.User.Callback then
 an(b.UserIcon,0.04,{ImageTransparency=0.95}):Play()
 an(b.Outline,0.04,{ImageTransparency=0.85}):Play()
+end
 end)
 al.AddSignal(b.InputEnded,function()
+if au.User.Callback then
 an(b.UserIcon,0.04,{ImageTransparency=1}):Play()
 an(b.Outline,0.04,{ImageTransparency=1}):Play()
-end)
 end
+end)
 end
 
 local d
