@@ -1179,7 +1179,7 @@ return function(Config)
 		function()
 			Window:ToggleFullscreen()
 		end,
-		(Window.Topbar.ButtonsType == "Default" and 998 or 999),
+		(not ButtonsOnLeft and 998 or 999),
 		true,
 		Color3.fromHex("#60C762"),
 		Window.Topbar.ButtonsType == "Mac" and 9 or nil
@@ -1246,7 +1246,7 @@ return function(Config)
 		--         Duration = 5,
 		--     })
 		-- end
-	end, (Window.Topbar.ButtonsType == "Default" and 997 or 998), nil, Color3.fromHex("#F4C948"))
+	end, (not ButtonsOnLeft and 997 or 998), nil, Color3.fromHex("#F4C948"))
 
 	function Window:OnOpen(func)
 		Window.OnOpenCallback = func
@@ -1916,7 +1916,7 @@ return function(Config)
 				Window:Destroy()
 			end
 		end
-	end, (Window.Topbar.ButtonsType == "Default" and 999 or 997), nil, Color3.fromHex("#F4695F"))
+	end, (not ButtonsOnLeft and 999 or 997), nil, Color3.fromHex("#F4695F"))
 
 	function Window:Tag(TagConfig)
 		if Window.UIElements.Main.Main.Topbar.Center.Visible == false then
