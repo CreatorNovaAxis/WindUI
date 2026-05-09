@@ -1489,7 +1489,7 @@ end
 
 function g.New(h)
 local j={
-Title=h.Title or"NovaAxis | Hub",
+Title=h.Title or"Notification",
 Content=h.Content or nil,
 Icon=h.Icon or nil,
 IconThemed=h.IconThemed,
@@ -1644,35 +1644,42 @@ end
 
 local u
 if j.Buttons and#j.Buttons>0 then
+local v=h.ButtonsAlign or"Right"
+
 u=d("Frame",{
-Size=UDim2.new(1,0,0,32),
+Size=UDim2.new(1,0,0,0),
+AutomaticSize="Y",
 BackgroundTransparency=1,
 Parent=r,
 },{
 d("UIListLayout",{
 Padding=UDim.new(0,8),
 FillDirection="Horizontal",
-HorizontalAlignment="Right",
+HorizontalAlignment=v,
 VerticalAlignment="Center",
 })
 })
 
-for v,x in next,j.Buttons do
-f(
-x.Title,
-x.Icon,
+for x,z in next,j.Buttons do
+local A=f(
+z.Title,
+z.Icon,
 function()
-b.SafeCallback(x.Callback)
-if x.CanClose~=false then
+b.SafeCallback(z.Callback)
+if z.CanClose~=false then
 j:Close()
 end
 end,
-x.Variant or"Secondary",
+z.Variant or"Secondary",
 u,
 nil,
 true,
 8
 )
+
+if z.Size then
+A.Size=z.Size
+end
 end
 end
 
@@ -2731,7 +2738,7 @@ at,
 as,
 })
 
-local av=af("Enter Key","solar:key-bold",nil,"Input",function(av)
+local av=af("Enter Key","key",nil,"Input",function(av)
 an=av
 end)
 
@@ -2835,7 +2842,7 @@ PaddingBottom=UDim.new(0,16),
 
 
 
-local az=ae("Exit","solar:exit-bold-duotone",function()
+local az=ae("Exit","log-out",function()
 al:Close()()
 end,"Tertiary",ax.Frame)
 
@@ -2847,13 +2854,8 @@ az.AnchorPoint=Vector2.new(0,1)
 end
 
 if ag.KeySystem.URL then
-ae("Get Key","solar:key-bold",function()
+ae("Get key","key",function()
 setclipboard(ag.KeySystem.URL)
-ag.WindUI:Notify{
-Title="NovaAxis | Hub",
-Content="Link copied to clipboard!",
-Icon="solar:link-circle-bold",
-}
 end,"Secondary",ax.Frame)
 end
 
@@ -2868,7 +2870,7 @@ if ag.KeySystem.API then
 
 local aA=240
 local aB=false
-local b=ae("Get key","solar:key-bold",nil,"Secondary",ax.Frame)
+local b=ae("Get key","key",nil,"Secondary",ax.Frame)
 
 local d=ab.NewRoundFrame(99,"Squircle",{
 Size=UDim2.new(0,1,1,0),
@@ -2891,7 +2893,7 @@ PaddingRight=UDim.new(0,5),
 }),
 })
 
-local f=ab.Image("solar:square-arrow-down-bold","solar:square-arrow-down-bold",0,"Temp","KeySystem",true)
+local f=ab.Image("chevron-down","chevron-down",0,"Temp","KeySystem",true)
 
 f.Size=UDim2.new(1,0,1,0)
 
@@ -2967,8 +2969,8 @@ r.Type=l.Type
 table.insert(am,r)
 
 local u=ab.Image(
-l.Icon or m.Icon or Icons[l.Type]or"solar:user-bold",
-l.Icon or m.Icon or Icons[l.Type]or"solar:user-bold",
+l.Icon or m.Icon or Icons[l.Type]or"user",
+l.Icon or m.Icon or Icons[l.Type]or"user",
 0,
 "Temp",
 "KeySystem",
@@ -3042,9 +3044,9 @@ end)
 ab.AddSignal(v.MouseButton1Click,function()
 r.Copy()
 ag.WindUI:Notify{
-Title="NovaAxis | Hub",
-Content="Key link copied to clipboard!",
-Image="solar:link-circle-bold",
+Title="Key System",
+Content="Key link copied to clipboard.",
+Image="key",
 }
 end)
 end
@@ -3081,7 +3083,7 @@ task.wait(0.4)
 ai(true)
 end
 
-local aA=ae("Submit","solar:square-arrow-right-bold",function()
+local aA=ae("Submit","arrow-right",function()
 local aA=tostring(an or"empty")local aB=
 ag.Folder or ag.Title
 
@@ -3098,9 +3100,9 @@ ai(true)
 end
 else
 ag.WindUI:Notify{
-Title="NovaAxis | Hub",
+Title="Key System. Error",
 Content="Invalid key.",
-Icon="solar:danger-triangle-bold",
+Icon="triangle-alert",
 }
 end
 elseif not ag.KeySystem.API then
@@ -3131,9 +3133,9 @@ if b then
 handleSuccess(aA)
 else
 ag.WindUI:Notify{
-Title="NovaAxis | Hub",
-Content="Error: "..d,
-Icon="solar:danger-triangle-bold",
+Title="Key System. Error",
+Content=d,
+Icon="triangle-alert",
 }
 end
 end
