@@ -6070,7 +6070,8 @@ if af.ViewportModel then
 local ai=af.ViewportHeight or 120
 
 local aj=ab("ViewportFrame",{
-Size=UDim2.new(1,0,0,ai),
+Size=af.ViewportSize
+or UDim2.new(1,0,0,ai),
 BackgroundTransparency=1,
 BorderSizePixel=0,
 Parent=ah.UIElements.Container,
