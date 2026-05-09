@@ -23,7 +23,8 @@ function Element:New(ElementConfig)
 		local vpHeight = ElementConfig.ViewportHeight or 120
 
 		local ViewportFrame = New("ViewportFrame", {
-			Size = UDim2.new(1, 0, 0, vpHeight),
+			Size = ElementConfig.ViewportSize
+				or UDim2.new(1, 0, 0, vpHeight),
 			BackgroundTransparency = 1,
 			BorderSizePixel = 0,
 			Parent = Paragraph.UIElements.Container,
