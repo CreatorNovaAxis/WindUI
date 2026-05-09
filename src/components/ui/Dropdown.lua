@@ -274,9 +274,9 @@ function DropdownMenu.New(Config, Dropdown, Element, CanCallback, Type)
 				SearchLabel.Name = "SearchBar"
 			end
 		end
-		
+
 		local SelectAllButton
-		if Dropdown.Multi then
+		if Dropdown.Multi and Dropdown.SelectAll then
 			local function isAllSelected()
 				local count = 0
 				local totalUnlocked = 0
@@ -297,7 +297,7 @@ function DropdownMenu.New(Config, Dropdown, Element, CanCallback, Type)
 					SelectAllButton.Frame.Title.TextLabel.Text = allSelected and "Deselect All" or "Select All"
 				end
 			end
-			
+
 			Dropdown._updateSelectAllText = updateSelectAllText
 
 			local selectAllIcon = Creator.Image("list-checks", "list-checks", 0, Config.Window.Folder, "Dropdown", true)
