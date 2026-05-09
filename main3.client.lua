@@ -47,6 +47,10 @@ local Window = WindUI:CreateWindow({
 	-- 		return Key == "HelloWorld"
 	-- 	end,
 	-- },
+    Topbar = {
+        ButtonsType = "Mac",
+        ButtonsAlign = "Right"
+     },
 })
 
 Window:Tag({
@@ -131,26 +135,20 @@ VStackRight:Button({
 })
 
 WindUI:Notify({
-    Title = "Notification",
-    Content = "With 2 Buttons",
-    Icon = "bird",
-    Duration = 10,
+    Title = "Update",
+    Content = "Ready to install",
+    ButtonsAlign = "Left",
     Buttons = {
         {
-            Title = "Okay",
-            Icon = "check",
+            Title = "Install",
             Variant = "Primary",
-            Callback = function()
-                print("Okay")
-            end,
+            Size = UDim2.new(0, 120, 0, 36),
+            Callback = function() end,
         },
         {
-            Title = "Cancel",
-            Variant = "Secondary",
-            CanClose = false,
-            Callback = function()
-                print("Cancel")
-            end,
+            Title = "Skip",
+            Size = UDim2.new(0, 80, 0, 36),
+            Callback = function() end,
         },
     },
 })
