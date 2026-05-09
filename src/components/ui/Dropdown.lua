@@ -274,6 +274,151 @@ function DropdownMenu.New(Config, Dropdown, Element, CanCallback, Type)
 				SearchLabel.Name = "SearchBar"
 			end
 		end
+		
+		local SelectAllButton
+		if Dropdown.Multi then
+			local function isAllSelected()
+				local count = 0
+				local totalUnlocked = 0
+				for _, tab in next, Dropdown.Tabs do
+					if not tab.Locked then
+						totalUnlocked = totalUnlocked + 1
+						if tab.Selected then
+							count = count + 1
+						end
+					end
+				end
+				return count >= totalUnlocked and totalUnlocked > 0
+			end
+
+			local function updateSelectAllText()
+				if SelectAllButton then
+					local allSelected = isAllSelected()
+					SelectAllButton.Frame.Title.TextLabel.Text = allSelected and "Deselect All" or "Select All"
+				end
+			end
+			
+			Dropdown._updateSelectAllText = updateSelectAllText
+
+			local selectAllIcon = Creator.Image("list-checks", "list-checks", 0, Config.Window.Folder, "Dropdown", true)
+			selectAllIcon.Size = UDim2.new(0, Element.TabIcon, 0, Element.TabIcon)
+			selectAllIcon.ImageLabel.ImageTransparency = 0.2
+
+			SelectAllButton = Creator.NewRoundFrame(
+				Element.MenuCorner - Element.MenuPadding,
+				"Squircle",
+				{
+					Size = UDim2.new(1, 0, 0, 36),
+					ImageTransparency = 1,
+					Parent = Dropdown.UIElements.Menu.Frame.ScrollingFrame,
+					ImageColor3 = Color3.new(1, 1, 1),
+					LayoutOrder = -1,
+				},
+				{
+					Creator.NewRoundFrame(Element.MenuCorner - Element.MenuPadding, "Glass-1.4", {
+						Size = UDim2.new(1, 0, 1, 0),
+						ThemeTag = {
+							ImageColor3 = "DropdownTabBorder",
+						},
+						ImageTransparency = 1,
+						Name = "Highlight",
+					}),
+					New("Frame", {
+						Size = UDim2.new(1, 0, 1, 0),
+						BackgroundTransparency = 1,
+					}, {
+						New("UIListLayout", {
+							Padding = UDim.new(0, Element.TabPadding),
+							FillDirection = "Horizontal",
+							VerticalAlignment = "Center",
+						}),
+						New("UIPadding", {
+							PaddingTop = UDim.new(0, Element.TabPadding),
+							PaddingLeft = UDim.new(0, Element.TabPadding),
+							PaddingRight = UDim.new(0, Element.TabPadding),
+							PaddingBottom = UDim.new(0, Element.TabPadding),
+						}),
+						New("UICorner", {
+							CornerRadius = UDim.new(0, Element.MenuCorner - Element.MenuPadding),
+						}),
+						selectAllIcon,
+						New("Frame", {
+							Size = UDim2.new(1, -Element.TabPadding - Element.TabIcon, 0, 0),
+							BackgroundTransparency = 1,
+							AutomaticSize = "Y",
+							Name = "Title",
+						}, {
+							New("TextLabel", {
+								Text = "Select All",
+								TextXAlignment = "Left",
+								FontFace = Font.new(Creator.Font, Enum.FontWeight.Medium),
+								ThemeTag = {
+									TextColor3 = "Text",
+									BackgroundColor3 = "Text",
+								},
+								TextSize = 15,
+								BackgroundTransparency = 1,
+								TextTransparency = 0.2,
+								LayoutOrder = 999,
+								AutomaticSize = "Y",
+								Size = UDim2.new(1, 0, 0, 0),
+							}),
+							New("UIListLayout", {
+								Padding = UDim.new(0, Element.TabPadding / 3),
+								FillDirection = "Vertical",
+							}),
+						}),
+					}),
+				},
+				true
+			)
+
+			Creator.AddSignal(SelectAllButton.MouseEnter, function()
+				Tween(SelectAllButton, 0.08, { ImageTransparency = 0.95 }):Play()
+			end)
+			Creator.AddSignal(SelectAllButton.InputEnded, function()
+				Tween(SelectAllButton, 0.08, { ImageTransparency = 1 }):Play()
+			end)
+
+			Creator.AddSignal(SelectAllButton.MouseButton1Click, function()
+				local allSelected = isAllSelected()
+
+				if allSelected then
+					if not Dropdown.AllowNone then
+						return
+					end
+					Dropdown.Value = {}
+					for _, tab in next, Dropdown.Tabs do
+						if not tab.Locked then
+							tab.Selected = false
+							Tween(tab.UIElements.TabItem, 0.1, { ImageTransparency = 1 }):Play()
+							Tween(tab.UIElements.TabItem.Highlight, 0.1, { ImageTransparency = 1 }):Play()
+							Tween(tab.UIElements.TabItem.Frame.Title.TextLabel, 0.1, { TextTransparency = 0.4 }):Play()
+							if tab.UIElements.TabIcon then
+								Tween(tab.UIElements.TabIcon.ImageLabel, 0.1, { ImageTransparency = 0.2 }):Play()
+							end
+						end
+					end
+				else
+					Dropdown.Value = {}
+					for _, tab in next, Dropdown.Tabs do
+						if not tab.Locked then
+							tab.Selected = true
+							Tween(tab.UIElements.TabItem, 0.1, { ImageTransparency = 0.95 }):Play()
+							Tween(tab.UIElements.TabItem.Highlight, 0.1, { ImageTransparency = 0.75 }):Play()
+							Tween(tab.UIElements.TabItem.Frame.Title.TextLabel, 0.1, { TextTransparency = 0 }):Play()
+							if tab.UIElements.TabIcon then
+								Tween(tab.UIElements.TabIcon.ImageLabel, 0.1, { ImageTransparency = 0 }):Play()
+							end
+							table.insert(Dropdown.Value, tab.Original)
+						end
+					end
+				end
+
+				updateSelectAllText()
+				Callback()
+			end)
+		end
 
 		for Index, Tab in next, Values do
 			if Tab.Type ~= "Divider" then
@@ -506,6 +651,9 @@ function DropdownMenu.New(Config, Dropdown, Element, CanCallback, Type)
 							end
 							Dropdown.Value = TabMain.Original
 						end
+						if Dropdown._updateSelectAllText then
+							Dropdown._updateSelectAllText()
+						end
 						Callback()
 					end)
 				elseif Type == "Menu" then
@@ -548,6 +696,10 @@ function DropdownMenu.New(Config, Dropdown, Element, CanCallback, Type)
 			Dropdown.UIElements.MenuCanvas.Size.Y.Offset
 		)
 		Callback()
+
+		if Dropdown._updateSelectAllText then
+			Dropdown._updateSelectAllText()
+		end
 
 		Dropdown.Values = Values
 	end
