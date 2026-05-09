@@ -489,19 +489,23 @@ return function(Config)
 			Window.User:Disable()
 		end
 
-		if Window.User.Callback then
-			Creator.AddSignal(UserIcon.MouseButton1Click, function()
-				Window.User.Callback()
-			end)
-			Creator.AddSignal(UserIcon.MouseEnter, function()
+		Creator.AddSignal(UserIcon.MouseButton1Click, function()
+			if Window.User.Callback then
+				Window.User.Callback(Window.User)
+			end
+		end)
+		Creator.AddSignal(UserIcon.MouseEnter, function()
+			if Window.User.Callback then
 				Tween(UserIcon.UserIcon, 0.04, { ImageTransparency = 0.95 }):Play()
 				Tween(UserIcon.Outline, 0.04, { ImageTransparency = 0.85 }):Play()
-			end)
-			Creator.AddSignal(UserIcon.InputEnded, function()
+			end
+		end)
+		Creator.AddSignal(UserIcon.InputEnded, function()
+			if Window.User.Callback then
 				Tween(UserIcon.UserIcon, 0.04, { ImageTransparency = 1 }):Play()
 				Tween(UserIcon.Outline, 0.04, { ImageTransparency = 1 }):Play()
-			end)
-		end
+			end
+		end)
 	end
 
 	local Outline1
