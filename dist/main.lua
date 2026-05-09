@@ -7783,7 +7783,7 @@ end
 end
 
 local av
-if an.Multi then
+if an.Multi and an.SelectAll then
 local function isAllSelected()
 local aw=0
 local ax=0
@@ -8359,6 +8359,7 @@ Value=an.Value,
 AllowNone=an.AllowNone,
 SearchBarEnabled=an.SearchBarEnabled or false,
 Multi=an.Multi,
+SelectAll=an.SelectAll or false,
 Callback=an.Callback or nil,
 
 UIElements={},
