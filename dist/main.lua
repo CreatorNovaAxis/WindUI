@@ -10032,86 +10032,171 @@ local ae=aa.New
 local af={}
 
 function af.New(ah,aj)
+
 local ak={
 __type="VStack",
+
 Elements={},
+
 ElementFrame=nil,
+Layout=nil,
 }
 
 local al=ae("Frame",{
+Name="VStack",
+
 Size=UDim2.new(1,0,0,0),
+
 BackgroundTransparency=1,
+
 AutomaticSize="Y",
+
 Parent=aj.Parent,
-},{
-ae("UIListLayout",{
+})
+
+local am=
+aj.Tab
+and aj.Tab.Gap
+or(aj.Window.NewElements and 1 or 6)
+
+local an=ae("UIListLayout",{
 FillDirection="Vertical",
+
 HorizontalAlignment="Center",
 
-Padding=UDim.new(0,aj.Tab and aj.Tab.Gap or(aj.Window.NewElements and 1 or 6))
-}),
+SortOrder=Enum.SortOrder.LayoutOrder,
+
+Padding=UDim.new(0,am),
+
+Parent=al,
 })
 
 ak.ElementFrame=al
+ak.Layout=an
 
-local am=aj.ElementsModule
-am.Load(
+local ao=aj.ElementsModule
+
+ao.Load(
 ak,
 al,
-am.Elements,
+ao.Elements,
+
 aj.Window,
 aj.WindUI,
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 nil,
-am,
+
+ao,
 aj.UIScale,
 aj.Tab
 )
 
+function ak.AddElement(ap,aq)
+table.insert(ap.Elements,aq)
+end
 
+function ak.RemoveElement(ap,aq)
+local ar=table.find(ap.Elements,aq)
+
+if ar then
+table.remove(ap.Elements,ar)
+
+pcall(function()
+if aq.Destroy then
+aq:Destroy()
+
+elseif aq.ElementFrame then
+aq.ElementFrame:Destroy()
+end
+end)
+end
+end
+
+function ak.Clear(ap)
+
+for aq,ar in ipairs(ap.Elements)do
+
+pcall(function()
+
+if typeof(ar)=="Instance"then
+ar:Destroy()
+
+elseif type(ar)=="table"then
+
+if ar.Destroy then
+ar:Destroy()
+
+elseif ar.ElementFrame then
+ar.ElementFrame:Destroy()
+
+elseif ar.UIElements
+and ar.UIElements.Main then
+
+ar.UIElements.Main:Destroy()
+end
+end
+end)
+end
+
+table.clear(ap.Elements)
+end
+
+function ak.Destroy(ap)
+
+ap:Clear()
+
+pcall(function()
+if ap.Layout then
+ap.Layout:Destroy()
+end
+end)
+
+pcall(function()
+if ap.ElementFrame then
+ap.ElementFrame:Destroy()
+end
+end)
+
+ap.Layout=nil
+ap.ElementFrame=nil
+
+table.clear(ap.Elements)
+end
+
+function ak.GetHeight(ap)
+
+if not ap.ElementFrame then
+return 0
+end
+
+return ap.ElementFrame.AbsoluteSize.Y
+end
+
+function ak.SetGap(ap,aq)
+
+if ap.Layout then
+ap.Layout.Padding=UDim.new(0,aq)
+end
+end
+
+function ak.FindElementByType(ap,aq)
+
+for ar,as in ipairs(ap.Elements)do
+if as.__type==aq then
+return as
+end
+end
+end
+
+function ak.GetElements(ap)
+return ap.Elements
+end
 
 return ak.__type,ak
 end
 
 return af end function a.X()
+
 return{
 Elements={
 Paragraph=a.load'C',
