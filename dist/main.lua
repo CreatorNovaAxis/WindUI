@@ -6047,9 +6047,7 @@ end end function a.C()
 
 local aa=a.load'c'
 local ab=aa.New
-
 local ac={}
-
 local ad=a.load'l'.New
 
 function ac.New(ae,af)
@@ -6062,12 +6060,69 @@ local ag={
 __type="Paragraph",
 Title=af.Title or"Paragraph",
 Desc=af.Desc or nil,
-
 Locked=af.Locked or false,
 }
-local ah=a.load'B'(af)
 
+local ah=a.load'B'(af)
 ag.ParagraphFrame=ah
+
+if af.ViewportModel then
+local ai=af.ViewportHeight or 120
+
+local aj=ab("ViewportFrame",{
+Size=UDim2.new(1,0,0,ai),
+BackgroundTransparency=1,
+BorderSizePixel=0,
+Parent=ah.UIElements.Container,
+LayoutOrder=-1,
+})
+
+ab("UICorner",{
+CornerRadius=UDim.new(0,8),
+Parent=aj,
+})
+
+local ak,al=pcall(function()
+return af.ViewportModel:Clone()
+end)
+
+if ak and al then
+al.Parent=aj
+
+local am=Instance.new"Camera"
+am.CameraType=Enum.CameraType.Fixed
+am.FieldOfView=af.ViewportFOV or 65
+
+local an=af.ViewportModel:GetPivot().Position
+local ao=af.ViewportOffset or Vector3.new(0,2,5)
+am.CFrame=CFrame.new(an+ao,an)
+
+am.Parent=aj
+aj.CurrentCamera=am
+end
+
+ag.ViewportFrame=aj
+
+function ag.SetModel(am,an,ao)
+for ap,aq in ipairs(aj:GetChildren())do
+if not aq:IsA"Camera"and not aq:IsA"UICorner"then
+aq:Destroy()
+end
+end
+
+if an then
+local ap,aq=pcall(function()return an:Clone()end)
+if ap and aq then
+aq.Parent=aj
+local ar=aj.CurrentCamera
+local as=an:GetPivot().Position
+local at=ao or af.ViewportOffset or Vector3.new(0,2,5)
+ar.CFrame=CFrame.new(as+at,as)
+end
+end
+end
+end
+
 if af.Buttons and#af.Buttons>0 then
 local ai=ab("Frame",{
 Size=UDim2.new(1,0,0,38),
@@ -6093,7 +6148,6 @@ nil,
 af.Window.NewElements and 999 or 10
 )
 al.Size=UDim2.new(1,0,0,38)
-
 end
 end
 
