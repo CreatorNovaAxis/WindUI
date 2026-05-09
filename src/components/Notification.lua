@@ -2,6 +2,8 @@ local Creator = require("../modules/Creator")
 local New = Creator.New
 local Tween = Creator.Tween
 
+local CreateButton = require("./ui/Button").New
+
 local NotificationModule = {
     Size = UDim2.new(0,300,1,-100-56),
     SizeLower = UDim2.new(0,300,1,-56),
@@ -199,6 +201,41 @@ function NotificationModule.New(Config)
             FontFace = Font.new(Creator.Font, Enum.FontWeight.Medium),
             Parent = TextContainer
         })
+    end
+    
+    -- Buttons
+    local ButtonsContainer
+    if Notification.Buttons and #Notification.Buttons > 0 then
+        ButtonsContainer = New("Frame", {
+            Size = UDim2.new(1,0,0,32),
+            BackgroundTransparency = 1,
+            Parent = TextContainer,
+        }, {
+            New("UIListLayout", {
+                Padding = UDim.new(0,8),
+                FillDirection = "Horizontal",
+                HorizontalAlignment = "Right",
+                VerticalAlignment = "Center",
+            })
+        })
+        
+        for _, ButtonConfig in next, Notification.Buttons do
+            CreateButton(
+                ButtonConfig.Title,
+                ButtonConfig.Icon,
+                function()
+                    Creator.SafeCallback(ButtonConfig.Callback)
+                    if ButtonConfig.CanClose ~= false then
+                        Notification:Close()
+                    end
+                end,
+                ButtonConfig.Variant or "Secondary",
+                ButtonsContainer,
+                nil,
+                true,
+                8
+            )
+        end
     end
     
     
