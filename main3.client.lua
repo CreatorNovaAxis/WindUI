@@ -59,9 +59,21 @@ Window:Tag({
 	Color = "ElementBackground",
 })
 
-Window:Tab({
+local MainTab = Window:Tab({
 	Title = "Main",
 	Icon = "warehouse",
+})
+
+MainTab:Dropdown({
+    Title = "Dropdown",
+    Multi = true,
+    SelectAll = true,  -- enables the Select All / Deselect All button
+    AllowNone = true,
+    Values = { "One", "Two", "Three", "Four" },
+    Value = { "One" },
+    Callback = function(values)
+        print("Selected:", values)
+    end,
 })
 
 Window:Section({
