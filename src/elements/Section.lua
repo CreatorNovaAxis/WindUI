@@ -10,6 +10,8 @@ function Element:New(Config)
         Title = Config.Title or "Section",
         Desc = Config.Desc,
         Icon = Config.Icon,
+        IconColor = Config.IconColor,
+        IconShape = Config.IconShape,
         IconThemed = Config.IconThemed,
         TextXAlignment = Config.TextXAlignment or "Left",
         TextSize = Config.TextSize or 19,
@@ -39,17 +41,44 @@ function Element:New(Config)
         Section.Icon = i or nil
         if Icon then Icon:Destroy() end
         if i then
-            Icon = Creator.Image(
+            local IconFrame = Creator.Image(
                 i,
                 i .. ":" .. Section.Title,
                 0,
                 Config.Window.Folder,
                 Section.__type,
-                true, 
+                Section.IconColor and false or true, 
                 Section.IconThemed,
                 "SectionIcon"
             )
-            Icon.Size = UDim2.new(0,Section.IconSize,0,Section.IconSize)
+            
+            if Section.IconColor and Section.IconShape then
+                local cornerRadius = Section.IconShape ~= "Circle" and (Config.Window.ElementConfig.UICorner - 6) or 9999
+                
+                Icon = Creator.NewRoundFrame(
+                    cornerRadius,
+                    "Squircle",
+                    {
+                        Size = UDim2.new(0, Section.IconSize + 8, 0, Section.IconSize + 8),
+                        ImageColor3 = Section.IconColor,
+                        BackgroundTransparency = 1,
+                    },
+                    {
+                        IconFrame,
+                    }
+                )
+                IconFrame.AnchorPoint = Vector2.new(0.5, 0.5)
+                IconFrame.Position = UDim2.new(0.5, 0, 0.5, 0)
+                IconFrame.Size = UDim2.new(0, Section.IconSize, 0, Section.IconSize)
+                IconFrame.ImageLabel.ImageTransparency = 0
+                IconFrame.ImageLabel.ImageColor3 = Creator.GetTextColorForHSB(Section.IconColor, 0.68)
+            else
+                if Section.IconColor then
+                    IconFrame.ImageLabel.ImageColor3 = Section.IconColor
+                end
+                Icon = IconFrame
+                Icon.Size = UDim2.new(0,Section.IconSize,0,Section.IconSize)
+            end
         end
     end
 
@@ -123,7 +152,8 @@ function Element:New(Config)
     local function UpdateTitleSize()
         local offset = 0
         if Icon then
-            offset = offset - (Section.IconSize + 8)
+            local iconWidth = (Section.IconColor and Section.IconShape) and (Section.IconSize + 8) or Section.IconSize
+            offset = offset - (iconWidth + 8)
         end
         if ChevronIconFrame.Visible then
             offset = offset - (Section.IconSize + 8)
