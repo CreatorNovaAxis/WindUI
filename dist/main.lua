@@ -9933,99 +9933,263 @@ local ae=aa.New
 local af={}
 
 function af.New(ah,aj)
+
 local ak={
 __type="HStack",
+
 AutoSpace=aj.AutoSpace or false,
+
 Elements={},
+
 ElementFrame=nil,
+Layout=nil,
 }
 
 local al=ae("Frame",{
+Name="HStack",
+
 Size=UDim2.new(1,0,0,0),
+
 BackgroundTransparency=1,
+
 AutomaticSize="Y",
+
 Parent=aj.Parent,
-},{
-ae("UIListLayout",{
+})
+
+local am=
+aj.Tab
+and aj.Tab.Gap
+or(aj.Window.NewElements and 1 or 6)
+
+local an=ae("UIListLayout",{
 FillDirection="Horizontal",
+
 HorizontalAlignment="Center",
 
-Padding=UDim.new(0,aj.Tab and aj.Tab.Gap or(aj.Window.NewElements and 1 or 6))
-}),
+SortOrder=Enum.SortOrder.LayoutOrder,
+
+Padding=UDim.new(0,am),
+
+Parent=al,
 })
 
 ak.ElementFrame=al
+ak.Layout=an
 
-local am=aj.ElementsModule
-am.Load(
+local ao=aj.ElementsModule
+
+ao.Load(
 ak,
 al,
-am.Elements,
+ao.Elements,
+
 aj.Window,
 aj.WindUI,
-function(an,ao)
-local ap=aj.Tab and aj.Tab.Gap or(aj.Window.NewElements and 1 or 6)
 
-local aq={}
-local ar=0
+function(ap,aq)
 
-for as,at in next,ao do
-if at.__type=="Space"then
-ar=ar+(at.ElementFrame.Size.X.Offset or 6)
-elseif at.__type=="Divider"then
-ar=ar+(at.ElementFrame.Size.X.Offset or 1)
+local ar={}
+local as=0
+
+for at,au in next,aq do
+
+if au.__type=="Space"then
+
+as+=
+(au.ElementFrame
+and au.ElementFrame.Size.X.Offset)
+or 6
+
+elseif au.__type=="Divider"then
+
+as+=
+(au.ElementFrame
+and au.ElementFrame.Size.X.Offset)
+or 1
+
 else
-table.insert(aq,at)
+table.insert(ar,au)
 end
 end
 
-local as=#aq
-if as==0 then return end
+local at=#ar
 
-local at=1/as
-
-local au=ap*(as-1)
-
-local av=-(au+ar)
-
-local aw=math.floor(av/as)
-local ax=av-(aw*as)
-
-for ay,az in next,aq do
-local aA=aw
-if ay<=math.abs(ax)then
-aA=aA-1
+if at<=0 then
+return
 end
 
-if az.ElementFrame then
-az.ElementFrame.Size=UDim2.new(at,aA,1,0)
+local au=1/at
+
+local av=am*math.max(0,at-1)
+
+local aw=
+-(av+as)
+
+local ax=
+math.floor(aw/at)
+
+local ay=
+aw-(ax*at)
+
+for az,aA in next,ar do
+
+local aB=ax
+
+if az<=math.abs(ay)then
+aB-=1
 end
+
+pcall(function()
+
+if aA.ElementFrame then
+aA.ElementFrame.Size=UDim2.new(
+au,
+aB,
+1,
+0
+)
+end
+end)
 end
 end,
-am,
+
+ao,
 aj.UIScale,
 aj.Tab
 )
 
 if ak.AutoSpace then
-for an in next,am.Elements do
-if an~="Space"and an~="Divider"then
-local ao=ak[an]
-ak[an]=function(ap,aq)
+
+for ap in next,ao.Elements do
+
+if ap~="Space"
+and ap~="Divider"then
+
+local aq=ak[ap]
+
+ak[ap]=function(ar,as)
+
 if#ak.Elements>0 then
 ak:Space()
 end
-return ao(ap,aq)
+
+return aq(ar,as)
 end
 end
 end
 end
 
+function ak.AddElement(ap,aq)
+table.insert(ap.Elements,aq)
+end
+
+function ak.RemoveElement(ap,aq)
+
+local ar=table.find(ap.Elements,aq)
+
+if ar then
+
+table.remove(ap.Elements,ar)
+
+pcall(function()
+
+if aq.Destroy then
+aq:Destroy()
+
+elseif aq.ElementFrame then
+aq.ElementFrame:Destroy()
+end
+end)
+end
+end
+
+function ak.Clear(ap)
+
+for aq,ar in ipairs(ap.Elements)do
+
+pcall(function()
+
+if typeof(ar)=="Instance"then
+ar:Destroy()
+
+elseif type(ar)=="table"then
+
+if ar.Destroy then
+ar:Destroy()
+
+elseif ar.ElementFrame then
+ar.ElementFrame:Destroy()
+
+elseif ar.UIElements
+and ar.UIElements.Main then
+
+ar.UIElements.Main:Destroy()
+end
+end
+end)
+end
+
+table.clear(ap.Elements)
+end
+
+function ak.Destroy(ap)
+
+ap:Clear()
+
+pcall(function()
+if ap.Layout then
+ap.Layout:Destroy()
+end
+end)
+
+pcall(function()
+if ap.ElementFrame then
+ap.ElementFrame:Destroy()
+end
+end)
+
+ap.Layout=nil
+ap.ElementFrame=nil
+
+table.clear(ap.Elements)
+end
+
+function ak.GetHeight(ap)
+
+if not ap.ElementFrame then
+return 0
+end
+
+return ap.ElementFrame.AbsoluteSize.Y
+end
+
+function ak.SetGap(ap,aq)
+
+if ap.Layout then
+ap.Layout.Padding=UDim.new(0,aq)
+end
+end
+
+function ak.FindElementByType(ap,aq)
+
+for ar,as in ipairs(ap.Elements)do
+
+if as.__type==aq then
+return as
+end
+end
+end
+
+function ak.GetElements(ap)
+return ap.Elements
+end
 
 return ak.__type,ak
 end
 
 return af end function a.W()
+
 local aa=a.load'c'
 local ae=aa.New
 
