@@ -11347,6 +11347,8 @@ function aa.New(ak,al,am,an,ao)
 local ap={
 Title=ak.Title or"Section",
 Icon=ak.Icon,
+IconColor=ak.IconColor,
+IconShape=ak.IconShape,
 IconThemed=ak.IconThemed,
 Opened=ak.Opened or false,
 
@@ -11357,6 +11359,9 @@ Expandable=false,
 }
 
 local aq
+local ar
+local as=ap.IconShape and ap.IconColor
+
 if ap.Icon then
 aq=ae.Image(
 ap.Icon,
@@ -11364,16 +11369,55 @@ ap.Icon,
 0,
 am,
 "Section",
-true,
+ap.IconColor and false or true,
 ap.IconThemed,
 "TabSectionIcon"
 )
 
-aq.Size=UDim2.new(0,ap.IconSize,0,ap.IconSize)
-aq.ImageLabel.ImageTransparency=.25
+if ap.IconColor then
+aq.ImageLabel.ImageColor3=ap.IconColor
 end
 
-local ar=af("Frame",{
+if as then
+local at=ap.IconShape~="Circle"and(ao.ElementConfig.UICorner-6)or 9999
+
+ar=ae.NewRoundFrame(
+at,
+"Squircle",
+{
+Size=UDim2.new(0,ap.IconSize+8,0,ap.IconSize+8),
+ImageColor3=ap.IconColor,
+BackgroundTransparency=1,
+},
+{
+aq,
+ae.NewRoundFrame(
+at,
+"Glass-1.4",
+{
+Size=UDim2.new(1,0,1,0),
+ThemeTag={
+ImageColor3="White",
+},
+ImageTransparency=0,
+Name="Outline",
+}
+),
+}
+)
+aq.AnchorPoint=Vector2.new(0.5,0.5)
+aq.Position=UDim2.new(0.5,0,0.5,0)
+aq.Size=UDim2.new(0,ap.IconSize,0,ap.IconSize)
+aq.ImageLabel.ImageTransparency=0
+aq.ImageLabel.ImageColor3=ae.GetTextColorForHSB(ap.IconColor,0.68)
+else
+ar=aq
+ar.Size=UDim2.new(0,ap.IconSize,0,ap.IconSize)
+ar.ImageLabel.ImageTransparency=.25
+end
+end
+
+local at=af("Frame",{
 Size=UDim2.new(0,ap.IconSize,0,ap.IconSize),
 BackgroundTransparency=1,
 Visible=false
@@ -11391,7 +11435,7 @@ ImageTransparency=.7,
 })
 })
 
-local as=af("Frame",{
+local au=af("Frame",{
 Size=UDim2.new(1,0,0,ap.HeaderSize),
 BackgroundTransparency=1,
 Parent=al,
@@ -11402,13 +11446,13 @@ Size=UDim2.new(1,0,0,ap.HeaderSize),
 BackgroundTransparency=1,
 Text="",
 },{
-aq,
+ar,
 af("TextLabel",{
 Text=ap.Title,
 TextXAlignment="Left",
 Size=UDim2.new(
 1,
-aq and(-ap.IconSize-10)*2
+ar and(-(as and ap.IconSize+8 or ap.IconSize)-10)*2
 or(-ap.IconSize-10),
 
 1,
@@ -11429,7 +11473,7 @@ FillDirection="Horizontal",
 VerticalAlignment="Center",
 Padding=UDim.new(0,10)
 }),
-ar,
+at,
 af("UIPadding",{
 PaddingLeft=UDim.new(0,11),
 PaddingRight=UDim.new(0,11),
@@ -11452,36 +11496,36 @@ VerticalAlignment="Bottom",
 })
 
 
-function ap.Tab(at,au)
+function ap.Tab(av,aw)
 if not ap.Expandable then
 ap.Expandable=true
-ar.Visible=true
+at.Visible=true
 end
-au.Parent=as.Content
-return aj.New(au,an)
+aw.Parent=au.Content
+return aj.New(aw,an)
 end
 
-function ap.Open(at)
+function ap.Open(av)
 if ap.Expandable then
 ap.Opened=true
-ah(as,0.33,{
-Size=UDim2.new(1,0,0,ap.HeaderSize+(as.Content.AbsoluteSize.Y/an))
+ah(au,0.33,{
+Size=UDim2.new(1,0,0,ap.HeaderSize+(au.Content.AbsoluteSize.Y/an))
 },Enum.EasingStyle.Quint,Enum.EasingDirection.Out):Play()
 
-ah(ar.ImageLabel,0.1,{Rotation=180},Enum.EasingStyle.Quint,Enum.EasingDirection.Out):Play()
+ah(at.ImageLabel,0.1,{Rotation=180},Enum.EasingStyle.Quint,Enum.EasingDirection.Out):Play()
 end
 end
-function ap.Close(at)
+function ap.Close(av)
 if ap.Expandable then
 ap.Opened=false
-ah(as,0.26,{
+ah(au,0.26,{
 Size=UDim2.new(1,0,0,ap.HeaderSize)
 },Enum.EasingStyle.Quint,Enum.EasingDirection.Out):Play()
-ah(ar.ImageLabel,0.1,{Rotation=0},Enum.EasingStyle.Quint,Enum.EasingDirection.Out):Play()
+ah(at.ImageLabel,0.1,{Rotation=0},Enum.EasingStyle.Quint,Enum.EasingDirection.Out):Play()
 end
 end
 
-ae.AddSignal(as.TextButton.MouseButton1Click,function()
+ae.AddSignal(au.TextButton.MouseButton1Click,function()
 if ap.Expandable then
 if ap.Opened then
 ap:Close()
@@ -11491,7 +11535,7 @@ end
 end
 end)
 
-ae.AddSignal(as.Content.UIListLayout:GetPropertyChangedSignal"AbsoluteContentSize",function()
+ae.AddSignal(au.Content.UIListLayout:GetPropertyChangedSignal"AbsoluteContentSize",function()
 if ap.Opened then
 ap:Open()
 end
@@ -11511,6 +11555,7 @@ end
 
 
 return aa end function a._()
+
 return{
 Tab="table-of-contents",
 Paragraph="type",
