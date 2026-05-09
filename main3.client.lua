@@ -1,5 +1,5 @@
 --[[
-    WindUI Example 2
+    WindUI Example 3
 ]]
 
 local cloneref = (cloneref or clonereference or function(instance)
