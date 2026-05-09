@@ -11,6 +11,8 @@ function Section.New(SectionConfig, Parent, Folder, UIScale, Window)
     local SectionModule = {
         Title = SectionConfig.Title or "Section",
         Icon = SectionConfig.Icon,
+        IconColor = SectionConfig.IconColor,
+        IconShape = SectionConfig.IconShape,
         IconThemed = SectionConfig.IconThemed,
         Opened = SectionConfig.Opened or false,
         
@@ -21,6 +23,9 @@ function Section.New(SectionConfig, Parent, Folder, UIScale, Window)
     }
     
     local IconFrame
+    local IconContainer
+    local HasIconShape = SectionModule.IconShape and SectionModule.IconColor
+    
     if SectionModule.Icon then
         IconFrame = Creator.Image(
             SectionModule.Icon,
@@ -28,13 +33,52 @@ function Section.New(SectionConfig, Parent, Folder, UIScale, Window)
             0,
             Folder,
             "Section",
-            true,
+            SectionModule.IconColor and false or true,
             SectionModule.IconThemed,
             "TabSectionIcon"
         )
         
-        IconFrame.Size = UDim2.new(0,SectionModule.IconSize,0,SectionModule.IconSize)
-        IconFrame.ImageLabel.ImageTransparency = .25
+        if SectionModule.IconColor then
+            IconFrame.ImageLabel.ImageColor3 = SectionModule.IconColor
+        end
+        
+        if HasIconShape then
+            local cornerRadius = SectionModule.IconShape ~= "Circle" and (Window.ElementConfig.UICorner - 6) or 9999
+            
+            IconContainer = Creator.NewRoundFrame(
+                cornerRadius,
+                "Squircle",
+                {
+                    Size = UDim2.new(0, SectionModule.IconSize + 8, 0, SectionModule.IconSize + 8),
+                    ImageColor3 = SectionModule.IconColor,
+                    BackgroundTransparency = 1,
+                },
+                {
+                    IconFrame,
+                    Creator.NewRoundFrame(
+                        cornerRadius,
+                        "Glass-1.4",
+                        {
+                            Size = UDim2.new(1, 0, 1, 0),
+                            ThemeTag = {
+                                ImageColor3 = "White",
+                            },
+                            ImageTransparency = 0,
+                            Name = "Outline",
+                        }
+                    ),
+                }
+            )
+            IconFrame.AnchorPoint = Vector2.new(0.5, 0.5)
+            IconFrame.Position = UDim2.new(0.5, 0, 0.5, 0)
+            IconFrame.Size = UDim2.new(0, SectionModule.IconSize, 0, SectionModule.IconSize)
+            IconFrame.ImageLabel.ImageTransparency = 0
+            IconFrame.ImageLabel.ImageColor3 = Creator.GetTextColorForHSB(SectionModule.IconColor, 0.68)
+        else
+            IconContainer = IconFrame
+            IconContainer.Size = UDim2.new(0, SectionModule.IconSize, 0, SectionModule.IconSize)
+            IconContainer.ImageLabel.ImageTransparency = .25
+        end
     end
     
     local ChevronIconFrame = New("Frame", {
@@ -66,13 +110,13 @@ function Section.New(SectionConfig, Parent, Folder, UIScale, Window)
             BackgroundTransparency = 1,
             Text = "",
         }, {
-            IconFrame,
+            IconContainer,
             New("TextLabel", {
                 Text = SectionModule.Title,
                 TextXAlignment = "Left",
                 Size = UDim2.new(
                     1, 
-                    IconFrame and (-SectionModule.IconSize-10)*2
+                    IconContainer and (-(HasIconShape and SectionModule.IconSize + 8 or SectionModule.IconSize)-10)*2
                         or (-SectionModule.IconSize-10),
                         
                     1,
