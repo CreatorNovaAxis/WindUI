@@ -17,7 +17,7 @@ function OpenButton.New(Window)
     }
     
     local Icon
-    
+    local IconSize = 22
     
     
     -- Icon = New("ImageLabel", {
@@ -159,9 +159,16 @@ function OpenButton.New(Window)
                 true,
                 Window.IconThemed
             )
-            Icon.Size = UDim2.new(0,22,0,22)
+            Icon.Size = UDim2.new(0,IconSize,0,IconSize)
             Icon.LayoutOrder = -1
             Icon.Parent = OpenButtonMain.Button.TextButton
+        end
+    end
+    
+    function OpenButtonMain:SetIconSize(size)
+        IconSize = size
+        if Icon then
+            Icon.Size = UDim2.new(0, size, 0, size)
         end
     end
     
