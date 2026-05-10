@@ -198,7 +198,6 @@ function OpenButton.New(Window)
     function OpenButtonMain:Visible(v)
         Container.Visible = v
     end
-    
     function OpenButtonMain:SetScale(scale)
         UIScale.Scale = scale
     end
@@ -207,6 +206,7 @@ function OpenButton.New(Window)
         local OpenButtonModule = {
             Title = OpenButtonConfig.Title,
             Icon = OpenButtonConfig.Icon,
+            IconSize = OpenButtonConfig.IconSize or 22,
             Enabled = OpenButtonConfig.Enabled,
             Position = OpenButtonConfig.Position,
             OnlyIcon = OpenButtonConfig.OnlyIcon or false,
@@ -268,6 +268,9 @@ function OpenButton.New(Window)
             end
         end
         
+        if OpenButtonModule.IconSize then
+            OpenButtonMain:SetIconSize(OpenButtonModule.IconSize)
+        end
         if OpenButtonModule.Icon then
             OpenButtonMain:SetIcon(OpenButtonModule.Icon)
         end
