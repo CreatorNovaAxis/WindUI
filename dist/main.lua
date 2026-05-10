@@ -5104,7 +5104,6 @@ local ap=ab.Drag(am)
 function ag.Visible(aq,ar)
 am.Visible=ar
 end
-
 function ag.SetScale(aq,ar)
 an.Scale=ar
 end
@@ -5113,6 +5112,7 @@ function ag.Edit(aq,ar)
 local as={
 Title=ar.Title,
 Icon=ar.Icon,
+IconSize=ar.IconSize or 22,
 Enabled=ar.Enabled,
 Position=ar.Position,
 OnlyIcon=ar.OnlyIcon or false,
@@ -5174,6 +5174,9 @@ elseif as.Title==nil then
 end
 end
 
+if as.IconSize then
+ag:SetIconSize(as.IconSize)
+end
 if as.Icon then
 ag:SetIcon(as.Icon)
 end
