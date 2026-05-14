@@ -7218,7 +7218,9 @@ return al.__type,al
 end
 
 return ah end function a.I()
-local aa=(cloneref or clonereference or function(aa)return aa end)
+local aa=(cloneref or clonereference or function(aa)
+return aa
+end)
 
 local ac=aa(game:GetService"UserInputService")
 
@@ -7252,12 +7254,20 @@ Locked=aj.Locked or false,
 LockedTitle=aj.LockedTitle,
 Value=NormalizeKeyCode(aj.Value)or"F",
 Callback=aj.Callback or function()end,
-CanChange=aj.CanChange or true,
+CanChange=aj.CanChange~=false,
+Blacklist=aj.Blacklist or{},
 Picking=false,
 UIElements={},
 }
 
-local al=true
+local al={}
+
+for am,an in next,ak.Blacklist do
+table.insert(al,Enum.KeyCode[NormalizeKeyCode(an)])
+end
+table.insert(al,Enum.KeyCode[NormalizeKeyCode"Escape"])
+
+local am=true
 
 ak.KeybindFrame=a.load'B'{
 Title=ak.Title,
@@ -7272,82 +7282,107 @@ ElementTable=ak,
 ParentConfig=aj,
 }
 
-ak.UIElements.Keybind=ah(ak.Value,nil,ak.KeybindFrame.UIElements.Main,nil,aj.Window.NewElements and 12 or 10)
-
-ak.UIElements.Keybind.Size=UDim2.new(
-0,24
-+ak.UIElements.Keybind.Frame.Frame.TextLabel.TextBounds.X,
-0,
-42
+ak.UIElements.Keybind=ah(
+ak.Value,
+nil,
+ak.KeybindFrame.UIElements.Main,
+nil,
+aj.Window.NewElements and 12 or 10
 )
+
+ak.UIElements.Keybind.Size=
+UDim2.new(0,24+ak.UIElements.Keybind.Frame.Frame.TextLabel.TextBounds.X,0,42)
 ak.UIElements.Keybind.AnchorPoint=Vector2.new(1,0.5)
 ak.UIElements.Keybind.Position=UDim2.new(1,0,0.5,0)
+ak.UIElements.Keybind.Interactable=false
 
 ae("UIScale",{
 Parent=ak.UIElements.Keybind,
-Scale=.85,
+Scale=0.85,
 })
 
-ad.AddSignal(ak.UIElements.Keybind.Frame.Frame.TextLabel:GetPropertyChangedSignal"TextBounds",function()
-ak.UIElements.Keybind.Size=UDim2.new(
-0,24
-+ak.UIElements.Keybind.Frame.Frame.TextLabel.TextBounds.X,
-0,
-42
+ad.AddSignal(
+ak.UIElements.Keybind.Frame.Frame.TextLabel:GetPropertyChangedSignal"TextBounds",
+function()
+ak.UIElements.Keybind.Size=
+UDim2.new(0,24+ak.UIElements.Keybind.Frame.Frame.TextLabel.TextBounds.X,0,42)
+end
 )
-end)
 
-function ak.Lock(am)
+function ak.Lock(an)
 ak.Locked=true
-al=false
+am=false
 return ak.KeybindFrame:Lock(ak.LockedTitle)
 end
-function ak.Unlock(am)
+function ak.Unlock(an)
 ak.Locked=false
-al=true
+am=true
 return ak.KeybindFrame:Unlock()
 end
 
-function ak.Set(am,an)
-local ao=NormalizeKeyCode(an)
-ak.Value=ao
-ak.UIElements.Keybind.Frame.Frame.TextLabel.Text=ao
+function ak.Set(an,ao)
+local ap=NormalizeKeyCode(ao)
+ak.Value=ap
+ak.UIElements.Keybind.Frame.Frame.TextLabel.Text=ap
 end
 
 if ak.Locked then
 ak:Lock()
 end
 
+local an
+
 ad.AddSignal(ak.KeybindFrame.UIElements.Main.MouseButton1Click,function()
-if al then
+if am then
 if ak.CanChange then
 ak.Picking=true
 ak.UIElements.Keybind.Frame.Frame.TextLabel.Text="..."
 
-task.wait(0.2)
 
-local am
-am=ac.InputBegan:Connect(function(an)
+
 local ao
+ao=ac.InputBegan:Connect(function(ap)
+local aq
 
-if an.UserInputType==Enum.UserInputType.Keyboard then
-ao=an.KeyCode.Name
-elseif an.UserInputType==Enum.UserInputType.MouseButton1 then
-ao="MouseLeft"
-elseif an.UserInputType==Enum.UserInputType.MouseButton2 then
-ao="MouseRight"
+if ap.UserInputType==Enum.UserInputType.Keyboard then
+if table.find(al,ap.KeyCode)then
+aq=nil
+return
+else
+aq=ap.KeyCode.Name
+end
+elseif
+ap.UserInputType==Enum.UserInputType.MouseButton1
+and not table.find(al,"MouseLeftButton")
+then
+aq="MouseLeftButton"
+elseif
+ap.UserInputType==Enum.UserInputType.MouseButton2
+and not table.find(al,"MouseRightButton")
+then
+aq="MouseRightButton"
 end
 
-local ap
-ap=ac.InputEnded:Connect(function(aq)
-if aq.KeyCode.Name==ao or ao=="MouseLeft"and aq.UserInputType==Enum.UserInputType.MouseButton1 or ao=="MouseRight"and aq.UserInputType==Enum.UserInputType.MouseButton2 then
+if an then
+an:Disconnect()
+end
+
+an=ac.InputEnded:Connect(function(ar)
+if
+aq
+and(
+ar.KeyCode.Name==aq
+or aq=="MouseLeft"and ar.UserInputType==Enum.UserInputType.MouseButton1
+or aq=="MouseRight"and ar.UserInputType==Enum.UserInputType.MouseButton2
+)
+then
 ak.Picking=false
 
-ak.UIElements.Keybind.Frame.Frame.TextLabel.Text=ao
-ak.Value=ao
+ak.UIElements.Keybind.Frame.Frame.TextLabel.Text=aq
+ak.Value=aq
 
-am:Disconnect()
-ap:Disconnect()
+ao:Disconnect()
+an:Disconnect()
 end
 end)
 end)
@@ -7355,22 +7390,24 @@ end
 end
 end)
 
-ad.AddSignal(ac.InputBegan,function(am,an)
+ad.AddSignal(ac.InputBegan,function(ao,ap)
 if ac:GetFocusedTextBox()then
 return
 end
-
-if not al then
+if not am then
+return
+end
+if ak.Picking then
 return
 end
 
-if am.UserInputType==Enum.UserInputType.Keyboard then
-if am.KeyCode.Name==ak.Value then
-ad.SafeCallback(ak.Callback,am.KeyCode.Name)
+if ao.UserInputType==Enum.UserInputType.Keyboard then
+if ao.KeyCode.Name==ak.Value then
+ad.SafeCallback(ak.Callback,ao.KeyCode.Name)
 end
-elseif am.UserInputType==Enum.UserInputType.MouseButton1 and ak.Value=="MouseLeft"then
+elseif ao.UserInputType==Enum.UserInputType.MouseButton1 and ak.Value=="MouseLeft"then
 ad.SafeCallback(ak.Callback,"MouseLeft")
-elseif am.UserInputType==Enum.UserInputType.MouseButton2 and ak.Value=="MouseRight"then
+elseif ao.UserInputType==Enum.UserInputType.MouseButton2 and ak.Value=="MouseRight"then
 ad.SafeCallback(ak.Callback,"MouseRight")
 end
 end)
@@ -7379,6 +7416,7 @@ return ak.__type,ak
 end
 
 return ag end function a.J()
+
 local aa=a.load'c'
 local ac=aa.New local ad=
 aa.Tween
