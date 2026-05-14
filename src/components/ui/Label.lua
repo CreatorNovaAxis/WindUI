@@ -54,7 +54,7 @@ function Label.New(Text, Icon, Parent, IsPlaceholder, Radius)
 					ImageColor3 = "Outline",
 				},
 				Size = UDim2.new(1, 0, 1, 0),
-				ImageTransparency = 0.48,
+				ImageTransparency = 0.67,
 			}, {
 				-- New("UIGradient", {
 				--     Rotation = 70,
